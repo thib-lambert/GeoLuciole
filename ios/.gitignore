@@ -1,6 +1,6 @@
-*.DS_Store
+.DS_Store
 *.xcworkspacedata
 *.plist
 *.xcuserstate
 *.lock
-/ios/Geoluciole/Pods
+Geoluciole/Pods/*

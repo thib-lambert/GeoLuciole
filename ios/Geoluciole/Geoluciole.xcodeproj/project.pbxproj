@@ -7,14 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0BEE677464A460DEC63669BB /* Pods_Geoluciole.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C39ECDF02EA15F014673B89E /* Pods_Geoluciole.framework */; };
 		223DE1F1F98FC28DC8BB65A5 /* ElasticSearchAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223DE612CD17EC476DAA208D /* ElasticSearchAPI.swift */; };
 		223DE23B94A8E5B52FE2D6E2 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223DE8E297A0FB9F407CBAC7 /* StringExtension.swift */; };
 		223DE3DD94FAE639A3D40CFF /* CharacterExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223DEC50D1BB2FA7C82C8993 /* CharacterExtension.swift */; };
-		2305CE7623C6321200354361 /* FMDatabasePool.m in Sources */ = {isa = PBXBuildFile; fileRef = 2305CE6B23C6321200354361 /* FMDatabasePool.m */; };
-		2305CE7723C6321200354361 /* FMDatabaseQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 2305CE6D23C6321200354361 /* FMDatabaseQueue.m */; };
-		2305CE7823C6321200354361 /* FMDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2305CE6E23C6321200354361 /* FMDatabase.m */; };
-		2305CE7923C6321200354361 /* FMDatabaseAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 2305CE7123C6321200354361 /* FMDatabaseAdditions.m */; };
-		2305CE7A23C6321200354361 /* FMResultSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 2305CE7323C6321200354361 /* FMResultSet.m */; };
 		2305CE7C23C632CF00354361 /* geoluciole.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = 2305CE7B23C632CF00354361 /* geoluciole.sqlite */; };
 		2305CE7F23C633B200354361 /* Constantes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2305CE7E23C633B200354361 /* Constantes.swift */; };
 		2305CE8123C6347A00354361 /* Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2305CE8023C6347A00354361 /* Tools.swift */; };
@@ -94,21 +90,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		1CD5BF4275B0E70542E64D26 /* Pods-Geoluciole.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geoluciole.debug.xcconfig"; path = "Target Support Files/Pods-Geoluciole/Pods-Geoluciole.debug.xcconfig"; sourceTree = "<group>"; };
 		223DE612CD17EC476DAA208D /* ElasticSearchAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ElasticSearchAPI.swift; sourceTree = "<group>"; };
 		223DE8E297A0FB9F407CBAC7 /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		223DEC50D1BB2FA7C82C8993 /* CharacterExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CharacterExtension.swift; sourceTree = "<group>"; };
 		2305CE6723C631CA00354361 /* Geoluciole-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Geoluciole-Bridging-Header.h"; sourceTree = "<group>"; };
-		2305CE6B23C6321200354361 /* FMDatabasePool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabasePool.m; sourceTree = "<group>"; };
-		2305CE6C23C6321200354361 /* FMDatabasePool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
-		2305CE6D23C6321200354361 /* FMDatabaseQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseQueue.m; sourceTree = "<group>"; };
-		2305CE6E23C6321200354361 /* FMDatabase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabase.m; sourceTree = "<group>"; };
-		2305CE6F23C6321200354361 /* FMDatabase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
-		2305CE7023C6321200354361 /* FMResultSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
-		2305CE7123C6321200354361 /* FMDatabaseAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMDatabaseAdditions.m; sourceTree = "<group>"; };
-		2305CE7223C6321200354361 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
-		2305CE7323C6321200354361 /* FMResultSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMResultSet.m; sourceTree = "<group>"; };
-		2305CE7423C6321200354361 /* FMDatabaseQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
-		2305CE7523C6321200354361 /* FMDB.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
 		2305CE7B23C632CF00354361 /* geoluciole.sqlite */ = {isa = PBXFileReference; lastKnownFileType = text; path = geoluciole.sqlite; sourceTree = "<group>"; };
 		2305CE7E23C633B200354361 /* Constantes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constantes.swift; sourceTree = "<group>"; };
 		2305CE8023C6347A00354361 /* Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tools.swift; sourceTree = "<group>"; };
@@ -191,6 +177,8 @@
 		6F7E0F4723DDCEBE00C75CB2 /* FormDropDownList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormDropDownList.swift; sourceTree = "<group>"; };
 		6F93EED323DAF4C90086B3A0 /* FormTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormTextField.swift; sourceTree = "<group>"; };
 		6FACFC6B23CF58B50036881E /* PartnersViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PartnersViewController.swift; sourceTree = "<group>"; };
+		9A5F1C9299A5196186CFB54F /* Pods-Geoluciole.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Geoluciole.release.xcconfig"; path = "Target Support Files/Pods-Geoluciole/Pods-Geoluciole.release.xcconfig"; sourceTree = "<group>"; };
+		C39ECDF02EA15F014673B89E /* Pods_Geoluciole.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Geoluciole.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -199,6 +187,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				237AD43623C60749009937AB /* libsqlite3.tbd in Frameworks */,
+				0BEE677464A460DEC63669BB /* Pods_Geoluciole.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,7 +198,6 @@
 			isa = PBXGroup;
 			children = (
 				2305CE8523C639CE00354361 /* DatabaseManager.swift */,
-				2345245623C79F62001D2CF7 /* FMDB */,
 				2305CE8723C63E7D00354361 /* Tables */,
 			);
 			path = Database;
@@ -233,24 +221,6 @@
 				238E1AB523D7ACD000BDD891 /* UpdateConditions.swift */,
 			);
 			path = Database;
-			sourceTree = "<group>";
-		};
-		2345245623C79F62001D2CF7 /* FMDB */ = {
-			isa = PBXGroup;
-			children = (
-				2305CE6F23C6321200354361 /* FMDatabase.h */,
-				2305CE6E23C6321200354361 /* FMDatabase.m */,
-				2305CE7223C6321200354361 /* FMDatabaseAdditions.h */,
-				2305CE7123C6321200354361 /* FMDatabaseAdditions.m */,
-				2305CE6C23C6321200354361 /* FMDatabasePool.h */,
-				2305CE6B23C6321200354361 /* FMDatabasePool.m */,
-				2305CE7423C6321200354361 /* FMDatabaseQueue.h */,
-				2305CE6D23C6321200354361 /* FMDatabaseQueue.m */,
-				2305CE7523C6321200354361 /* FMDB.h */,
-				2305CE7023C6321200354361 /* FMResultSet.h */,
-				2305CE7323C6321200354361 /* FMResultSet.m */,
-			);
-			path = FMDB;
 			sourceTree = "<group>";
 		};
 		236EE58623CB1D360000ADE3 /* CustomItems */ = {
@@ -279,6 +249,7 @@
 				237AD41C23C606D4009937AB /* Products */,
 				237AD43423C60748009937AB /* Frameworks */,
 				6FB48CE923DAE8C800C6A8B6 /* Recovered References */,
+				FDDEB9A13541B7465F248138 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -321,6 +292,7 @@
 			isa = PBXGroup;
 			children = (
 				237AD43523C60748009937AB /* libsqlite3.tbd */,
+				C39ECDF02EA15F014673B89E /* Pods_Geoluciole.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -473,6 +445,16 @@
 			name = "Recovered References";
 			sourceTree = "<group>";
 		};
+		FDDEB9A13541B7465F248138 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				1CD5BF4275B0E70542E64D26 /* Pods-Geoluciole.debug.xcconfig */,
+				9A5F1C9299A5196186CFB54F /* Pods-Geoluciole.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -480,9 +462,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 237AD43123C606D4009937AB /* Build configuration list for PBXNativeTarget "Geoluciole" */;
 			buildPhases = (
+				227A8C439E8EE597075AA8F5 /* [CP] Check Pods Manifest.lock */,
 				237AD41723C606D4009937AB /* Sources */,
 				237AD41823C606D4009937AB /* Frameworks */,
 				237AD41923C606D4009937AB /* Resources */,
+				718DC15BF8D493127BD9083E /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -552,6 +536,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		227A8C439E8EE597075AA8F5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Geoluciole-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		718DC15BF8D493127BD9083E /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Geoluciole/Pods-Geoluciole-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Geoluciole/Pods-Geoluciole-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Geoluciole/Pods-Geoluciole-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		237AD41723C606D4009937AB /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -578,10 +604,8 @@
 				236EE58323CB19560000ADE3 /* UIViewExtension.swift in Sources */,
 				6F93EED423DAF4C90086B3A0 /* FormTextField.swift in Sources */,
 				6F7C068423D658ED006924F6 /* FormSecondPageViewController.swift in Sources */,
-				2305CE7623C6321200354361 /* FMDatabasePool.m in Sources */,
 				6299A17623CF65E500057652 /* CustomTimer.swift in Sources */,
 				62330D2D23CDF05F003E7586 /* GPSConsentRGPDViewController.swift in Sources */,
-				2305CE7823C6321200354361 /* FMDatabase.m in Sources */,
 				62AE470023DAEE4A00583FCC /* UIDeviceExtension.swift in Sources */,
 				23610E8323CE021C003B6EF8 /* SettingsDateFieldView.swift in Sources */,
 				6F7C068223D658EB006924F6 /* FormFirstPageViewController.swift in Sources */,
@@ -605,19 +629,16 @@
 				2305CE8623C639CE00354361 /* DatabaseManager.swift in Sources */,
 				23E22D2123C7645100C3540E /* SettingsViewController.swift in Sources */,
 				23CC896023E2462800AAAF8A /* FormTitlePage.swift in Sources */,
-				2305CE7A23C6321200354361 /* FMResultSet.m in Sources */,
 				2366D1BA23CF712A00E1B493 /* FormConsentRGPDViewController.swift in Sources */,
 				235D45D123C9247A00992B7B /* ParentViewController.swift in Sources */,
 				6F7C067523D5F948006924F6 /* FormPageViewController.swift in Sources */,
 				6F48FA6323D9E176000709A4 /* FormDateFieldView.swift in Sources */,
-				2305CE7723C6321200354361 /* FMDatabaseQueue.m in Sources */,
 				2305CE8923C63E9700354361 /* LocationTable.swift in Sources */,
 				23D8423A23D1F7C400E7802E /* ParentModalViewController.swift in Sources */,
 				23F98BAA23CF038800DA7931 /* NoBadgeView.swift in Sources */,
 				23610E8523CE3446003B6EF8 /* LanguageSelectorView.swift in Sources */,
 				6F7C068623D658EF006924F6 /* FormThirdPageViewController.swift in Sources */,
 				23975B1923D74D1A00F89106 /* Badge.swift in Sources */,
-				2305CE7923C6321200354361 /* FMDatabaseAdditions.m in Sources */,
 				6F7E0F4823DDCEBE00C75CB2 /* FormDropDownList.swift in Sources */,
 				223DE1F1F98FC28DC8BB65A5 /* ElasticSearchAPI.swift in Sources */,
 				223DE3DD94FAE639A3D40CFF /* CharacterExtension.swift in Sources */,
@@ -780,6 +801,7 @@
 		};
 		237AD43223C606D4009937AB /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1CD5BF4275B0E70542E64D26 /* Pods-Geoluciole.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
@@ -804,6 +826,7 @@
 		};
 		237AD43323C606D4009937AB /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9A5F1C9299A5196186CFB54F /* Pods-Geoluciole.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
