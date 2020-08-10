@@ -34,9 +34,9 @@ class Constantes {
     // Mettre a TRUE si on veut afficher les logs
     static let DEBUG = false
 
-    static let DB_NAME = "geoluciole.sqlite"
-    static let CGU_NAME = "cgu.pdf"
-    static let BADGES_FILENAME = "badges.json"
+    static let DB_NAME = "geoluciole"
+    static let CGU_NAME = "cgu"
+    static let BADGES_FILENAME = "badges"
 
     static let REVOQ_CONSENT_MAIL = "melanie.mondo1@univ-lr.fr"
     // Il faut incrémenter lorsque l'on veut prendre en compte des modifs pour la base de données et faire le nécessaire dans la fonction upgradeDatabase de la classe DatabaseManager
@@ -51,9 +51,9 @@ class Constantes {
     // SERVEUR ELASTIC SEARCH
     static let API_URL_UNIV_LR_HTTP = "http://datamuseum.univ-lr.fr:9200"
     static let API_URL_UNIV_LR_HTTPS = "https://datamuseum.univ-lr.fr:9200"
-    static let SECONDE: Double = 1.0 //
-    static let MINUTE: Double = SECONDE * 60.0
-    static let HEURE: Double = MINUTE * 60.0 // en secondes
+    static let SECONDE: Double = 1.0 // 1 seconde
+    static let MINUTE: Double = SECONDE * 60.0 // 1 minute
+    static let HEURE: Double = MINUTE * 60.0 // 1 heure
     static let TIMER_SEND_DATA: Double = HEURE * 4.0 // en secondes ==> paramètre pour l'envoi régulier au serveur (ici 4h : 3600s * 4 = 4h)
 
     // DISTANCE DE DETECTION

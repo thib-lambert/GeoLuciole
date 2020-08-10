@@ -30,7 +30,7 @@ import CoreLocation
 
 class LocationHandler: NSObject, CLLocationManagerDelegate {
 
-    fileprivate static var INSTANCE: LocationHandler!
+    static var shared = LocationHandler()
     fileprivate var locationManager: CLLocationManager!
 
     fileprivate override init() {
@@ -44,14 +44,6 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
         if #available(iOS 11.0, *) {
             self.locationManager.showsBackgroundLocationIndicator = true
         }
-    }
-
-    static func getInstance() -> LocationHandler {
-        if INSTANCE == nil {
-            INSTANCE = LocationHandler()
-        }
-
-        return INSTANCE
     }
 
     /// Demande l'autorisation d'utiliser la localisation
@@ -70,20 +62,15 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
     }
 
     /// Vérifie si la localisation peut être utilisée dans l'application
-    func locationCanBeUsed() -> Bool {
-        var active: Bool = false
+    var locationCanBeUsed: Bool {
         let status = CLLocationManager.authorizationStatus()
         // On vérifie que les autorisations nécessaires sont données au niveau du terminal
         let authorized = (status == CLAuthorizationStatus.authorizedAlways || status == CLAuthorizationStatus.authorizedWhenInUse)
 
         // Vérifie que la collecte est autorisée
-        let sendData = UserPrefs.getInstance().bool(forKey: UserPrefs.KEY_SEND_DATA)
+        let sendData = UserPrefs.shared.bool(forKey: .sendData)
 
-        if sendData && authorized {
-            active = true
-        }
-
-        return active
+        return sendData && authorized
     }
 
     /// Calcule la distance entre la position courante et la dernière position connue
@@ -95,14 +82,14 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
         if (currentPos.coordinate.latitude != lastPos.coordinate.latitude &&
                 currentPos.coordinate.longitude != lastPos.coordinate.longitude) {
             if Constantes.DEBUG {
-                print("calcul de la distance")
+                print("Calcul de la distance")
             }
 
             // calcul de distance entre les deux points
             let distance = currentPos.distance(from: lastPos)
 
             // On prend la distance réelle si celle-ci est inférieure ou égale à la distance estimée
-            LocationTable.getInstance().insertQuery([
+            LocationTable.shared.insertQuery([
                 LocationTable.ALTITUDE: currentLocation.altitude,
                 LocationTable.LATITUDE: currentLocation.latitude,
                 LocationTable.LONGITUDE: currentLocation.longitude,
@@ -115,31 +102,31 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
             self.updateDistanceParcourue(newDistance: distance)
 
             // on sauvegarde la dernière position si elle semble cohérente
-            UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_LAST_POINT, value: currentLocation.toDictionary())
+            UserPrefs.shared.setPrefs(key: .lastPosition, value: currentLocation.toDictionary)
         }
     }
 
     /// Mise à jour de la distance parcourue
     fileprivate func updateDistanceParcourue(newDistance: Double) {
         // on regarde si on avait une valeur auparavant
-        let distanceUserPrefs = UserPrefs.getInstance().object(forKey: UserPrefs.KEY_DISTANCE_TRAVELED)
+        let distanceUserPrefs = UserPrefs.shared.object(forKey: .distanceTraveled)
 
         // Si on avait une valeur, on incrémente la valeur
         if distanceUserPrefs != nil {
             var distanceParcourue = distanceUserPrefs as! Double
             distanceParcourue += newDistance
-            UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_DISTANCE_TRAVELED, value: distanceParcourue)
+            UserPrefs.shared.setPrefs(key: .distanceTraveled, value: distanceParcourue)
             // Sinon, on prend la valeur passé en paramètre
         } else {
-            UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_DISTANCE_TRAVELED, value: newDistance)
+            UserPrefs.shared.setPrefs(key: .distanceTraveled, value: newDistance)
         }
     }
 
     /// Retourne la dernière localisation de l'utilisateur. Retourne nil si aucune localisation n'est trouvée
-    fileprivate func getLastLocation() -> Location? {
+    fileprivate var getLastLocation: Location? {
         var lastLocation: Location?
 
-        if let lastLocationUserPrefs = UserPrefs.getInstance().object(forKey: UserPrefs.KEY_LAST_POINT) as? [String: Any] {
+        if let lastLocationUserPrefs = UserPrefs.shared.object(forKey: .lastPosition) as? [String: Any] {
             lastLocation = Location(lastLocationUserPrefs)
         }
 
@@ -155,9 +142,9 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
 
         // Création de l'objet à insérer
         let now = Date()
-        let currentLocation = Location(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, altitude: location.altitude, timestamp: now.timeIntervalSince1970, precision: location.horizontalAccuracy, vitesse: location.speed, date_str: Tools.convertDateToServerDate(date: now))
+        let currentLocation = Location(latitude: location.coordinate.latitude, longitude: location.coordinate.longitude, altitude: location.altitude, timestamp: now.timeIntervalSince1970, precision: location.horizontalAccuracy, vitesse: location.speed, date_str: Tools.convertDateToServerDate(now))
 
-        let sendData = UserPrefs.getInstance().bool(forKey: UserPrefs.KEY_SEND_DATA)
+        let sendData = UserPrefs.shared.bool(forKey: .sendData)
 
         // Si la vitesse est négative ou que la collecte des données n'est pas activée,
         // on ne prend pas en compte la localisation
@@ -167,11 +154,11 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
             }
             // Avant de calculer la distance, on regarde si on a déja enregistré un point pour lancer le calcul
             // Si on a une ancienne position, on lance le calcul de distance
-            if let lastPosition = getLastLocation() {
+            if let lastPosition = getLastLocation {
                 calculateDistance(currentLocation: currentLocation, lastLocation: lastPosition)
                 // Si on a pas de position plus ancienne, on insert les données
             } else {
-                LocationTable.getInstance().insertQuery([
+                LocationTable.shared.insertQuery([
                     LocationTable.ALTITUDE: currentLocation.altitude,
                     LocationTable.LATITUDE: currentLocation.latitude,
                     LocationTable.LONGITUDE: currentLocation.longitude,
@@ -182,7 +169,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
                 ])
 
                 // on sauvegarde la dernière position si elle semble cohérente
-                UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_LAST_POINT, value: currentLocation.toDictionary())
+                UserPrefs.shared.setPrefs(key: .lastPosition, value: currentLocation.toDictionary)
             }
 
             // On redefini les zones pour pas les perdre et on check les badges de distance
@@ -213,21 +200,18 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
 
     /// Appelé lors d'un changement d'autorisation lié à la localisation
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        let sendData = UserPrefs.getInstance().bool(forKey: UserPrefs.KEY_SEND_DATA)
+        let sendData = UserPrefs.shared.bool(forKey: .sendData)
 
         switch status {
-        case CLAuthorizationStatus.authorizedAlways:
+        case .authorizedAlways:
             if sendData {
                 self.startLocationTracking()
-                CustomTimer.getInstance().startTimerLocalisation()
+                YTimer.shared.startTimerLocalisation()
             }
-        case CLAuthorizationStatus.denied:
+        case .denied, .notDetermined:
             self.stopLocationTracking()
-            CustomTimer.getInstance().stopTimerLocation()
+            YTimer.shared.stopTimerLocation()
 
-        case CLAuthorizationStatus.notDetermined:
-            self.stopLocationTracking()
-            CustomTimer.getInstance().stopTimerLocation()
         default:
             if Constantes.DEBUG {
                 print("Statut inconnu")
@@ -238,7 +222,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
     static func startTrackingBadges() {
 
         // Récupération des badges qui n'ont pas été obtenu
-        BadgesTable.getInstance().selectQuery([], where: [WhereCondition(onColumn: BadgesTable.IS_OBTAIN, withCondition: 0), WhereCondition(onColumn: BadgesTable.TYPE, withCondition: "place")]) { (success, queryResult, error) in
+        BadgesTable.shared.selectQuery([], where: [WhereCondition(onColumn: BadgesTable.IS_OBTAIN, withCondition: 0), WhereCondition(onColumn: BadgesTable.TYPE, withCondition: "place")]) { (success, queryResult, error) in
 
             if let error = error {
                 if Constantes.DEBUG {
@@ -255,7 +239,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
                 let geofenceRegion = CLCircularRegion(center: geofenceRegionCenter, radius: CLLocationDistance(badge.proximity!), identifier: "\(badge.id)")
                 geofenceRegion.notifyOnEntry = true
                 geofenceRegion.notifyOnExit = false
-                LocationHandler.getInstance().locationManager.startMonitoring(for: geofenceRegion)
+                LocationHandler.shared.locationManager.startMonitoring(for: geofenceRegion)
             }
         }
     }
@@ -267,10 +251,9 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
     }
 
     fileprivate func didEnterRegion(forRegion region: CLRegion!) {
-
         var badge: Badge!
 
-        BadgesTable.getInstance().selectQuery([], where: [WhereCondition(onColumn: BadgesTable.ID, withCondition: region.identifier)]) { (success, queryResult, error) in
+        BadgesTable.shared.selectQuery([], where: [WhereCondition(onColumn: BadgesTable.ID, withCondition: region.identifier)]) { (success, queryResult, error) in
 
             if let error = error {
                 if Constantes.DEBUG {
@@ -286,7 +269,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
 
         if badge != nil {
             // On update la base de données
-            BadgesTable.getInstance().updateQuery(updateConditions: [UpdateConditions(onColumn: BadgesTable.IS_OBTAIN, newValue: true)], where: [WhereCondition(onColumn: BadgesTable.ID, withCondition: badge.id), WhereCondition(onColumn: BadgesTable.IS_OBTAIN, withCondition: 0)]) { success, error in
+            BadgesTable.shared.updateQuery(updateConditions: [UpdateConditions(onColumn: BadgesTable.IS_OBTAIN, newValue: true)], where: [WhereCondition(onColumn: BadgesTable.ID, withCondition: badge.id), WhereCondition(onColumn: BadgesTable.IS_OBTAIN, withCondition: 0)]) { success, error in
 
                 if let error = error {
                     if Constantes.DEBUG {
@@ -296,12 +279,12 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
                 }
 
                 // On arrete de suivre la region
-                LocationHandler.getInstance().locationManager.stopMonitoring(for: region)
+                LocationHandler.shared.locationManager.stopMonitoring(for: region)
 
-                UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_LAST_BADGE, value: badge.resource)
+                UserPrefs.shared.setPrefs(key: .lastBadgeObtained, value: badge.resource)
 
                 // Send notification
-                NotificationHandler.getInstance().sendBadgeUnlocked(titleMessage: Tools.getTranslate(key: "notification_title"), bodyMessage: badge.description, idNotification: String(badge!.id))
+                NotificationHandler.shared.sendBadgeUnlocked(titleMessage: Tools.getTranslate(key: "notification_title"), bodyMessage: badge.description, idNotification: String(badge!.id))
             }
         }
     }
@@ -309,9 +292,9 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
     fileprivate func checkDistanceBadges() {
         var badgeObtained = [Badge]()
         // distance en M
-        let distanceTraveledActually = UserPrefs.getInstance().double(forKey: UserPrefs.KEY_DISTANCE_TRAVELED)
+        let distanceTraveledActually = UserPrefs.shared.double(forKey: .distanceTraveled)
 
-        BadgesTable.getInstance().selectQuery([], where: [WhereCondition(onColumn: BadgesTable.TYPE, withCondition: "distance"), WhereCondition(onColumn: BadgesTable.IS_OBTAIN, withCondition: 0)]) { (success, queryResult, error) in
+        BadgesTable.shared.selectQuery([], where: [WhereCondition(onColumn: BadgesTable.TYPE, withCondition: "distance"), WhereCondition(onColumn: BadgesTable.IS_OBTAIN, withCondition: 0)]) { (success, queryResult, error) in
 
             if let error = error {
                 if Constantes.DEBUG {
@@ -331,7 +314,7 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
 
         // On update la base de données
         for badge in badgeObtained {
-            BadgesTable.getInstance().updateQuery(updateConditions: [UpdateConditions(onColumn: BadgesTable.IS_OBTAIN, newValue: true)], where: [WhereCondition(onColumn: BadgesTable.ID, withCondition: badge.id), WhereCondition(onColumn: BadgesTable.IS_OBTAIN, withCondition: 0)]) { success, error in
+            BadgesTable.shared.updateQuery(updateConditions: [UpdateConditions(onColumn: BadgesTable.IS_OBTAIN, newValue: true)], where: [WhereCondition(onColumn: BadgesTable.ID, withCondition: badge.id), WhereCondition(onColumn: BadgesTable.IS_OBTAIN, withCondition: 0)]) { success, error in
 
                 if let error = error {
                     if Constantes.DEBUG {
@@ -340,10 +323,10 @@ class LocationHandler: NSObject, CLLocationManagerDelegate {
                     return
                 }
 
-                UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_LAST_BADGE, value: badge.resource)
+                UserPrefs.shared.setPrefs(key: .lastBadgeObtained, value: badge.resource)
 
                 // Send notification
-                NotificationHandler.getInstance().sendBadgeUnlocked(titleMessage: Tools.getTranslate(key: "notification_title"), bodyMessage: badge.description, idNotification: String(badge.id))
+                NotificationHandler.shared.sendBadgeUnlocked(titleMessage: Tools.getTranslate(key: "notification_title"), bodyMessage: badge.description, idNotification: String(badge.id))
             }
         }
     }

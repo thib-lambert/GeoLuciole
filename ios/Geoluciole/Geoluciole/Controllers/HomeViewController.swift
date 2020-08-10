@@ -119,9 +119,9 @@ class HomeViewController: ParentViewController {
         self.calcProgress()
 
         if let _ = UserPrefs.shared.object(forKey: .lastBadgeObtained) {
-            self.lastTrophyView.setImage(nom: UserPrefs.shared.string(forKey: .lastBadgeObtained))
+            self.lastTrophyView.setImage(name: UserPrefs.shared.string(forKey: .lastBadgeObtained))
         } else {
-            self.lastTrophyView.setImage(nom: "no-badge")
+            self.lastTrophyView.setImage(name: "no-badge")
         }
         
         self.collectDataSwitchView.isUserInteractionEnabled = send

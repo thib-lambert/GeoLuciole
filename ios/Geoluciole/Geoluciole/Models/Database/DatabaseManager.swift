@@ -30,64 +30,55 @@ import FMDB
 
 class DatabaseManager {
 
-    fileprivate static var DATABASE_INSTANCE: FMDatabase!
+    fileprivate static var dbPath = Tools.getPath(Constantes.DB_NAME, ext: ".sqlite")
+    static var shared = FMDatabase(path: dbPath)
     
     static let sharedQueue: FMDatabaseQueue = {
-        return FMDatabaseQueue(path: Tools.getPath(Constantes.DB_NAME))!
+        return FMDatabaseQueue(path: dbPath)!
     }()
     
     static var dbVersion: Int {
         get {
-            let db = DatabaseManager.getInstance()
+            let db = DatabaseManager.shared
             db.open()
-            let dbVersion = Int(DatabaseManager.getInstance().userVersion)
+            let dbVersion = Int(DatabaseManager.shared.userVersion)
             db.close()
             return dbVersion
         }
         set {
-            let db = DatabaseManager.getInstance()
+            let db = DatabaseManager.shared
             db.open()
             db.userVersion = UInt32(Constantes.DB_VERSION)
             db.close()
         }
     }
 
-    static func getInstance() -> FMDatabase {
-        if DATABASE_INSTANCE == nil {
-            DATABASE_INSTANCE = FMDatabase(path: Tools.getPath(Constantes.DB_NAME))
-        }
-
-        return DATABASE_INSTANCE
-    }
-
     /// Permet de créer toutes les tables de la Db
     /// - Parameter tables: la liste des tables à créer
     static func createTable(tables: [Table]) {
-
         for table in tables {
-            if !DatabaseManager.getInstance().isOpen {
-                 DatabaseManager.getInstance().open()
+            if !DatabaseManager.shared.isOpen {
+                 DatabaseManager.shared.open()
             }
             
             do {
-                try DatabaseManager.getInstance().executeUpdate(table.prepareSQLForCreateTable(), values: nil)
+                try DatabaseManager.shared.executeUpdate(table.prepareSQLForCreateTable(), values: nil)
             } catch {
                 if Constantes.DEBUG {
                     print(error.localizedDescription)
                 }
             }
-            DatabaseManager.getInstance().close()
+            DatabaseManager.shared.close()
         }
     }
 
     static func upgradeDatabase() {
-        
         if DatabaseManager.dbVersion < Constantes.DB_VERSION {
             // Pour upgrade, il faut faire un if de cette façon et placer l'upgrade dans le block du if
             if Constantes.DB_VERSION == 1 {
                 // Créations des tables pour la Db
-                DatabaseManager.createTable(tables: [LocationTable.getInstance(), BadgesTable.getInstance()])
-                BadgesTable.getInstance().insertBadges()
+                DatabaseManager.createTable(tables: [LocationTable.shared, BadgesTable.shared])
+                BadgesTable.shared.insertBadges()
             }
             
             // Mise a niveau de la version de la base de données

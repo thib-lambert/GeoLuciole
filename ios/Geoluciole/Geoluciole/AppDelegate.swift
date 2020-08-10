@@ -32,8 +32,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-    let userNotificationCenter = UNUserNotificationCenter.current()
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         //Afficher chemin vers le dossier Documents de l'app
@@ -42,24 +40,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
 
         // Copie de la Db du Bundle de l'app vers le dossier Documents de l'app
-        Tools.copyFile(fileName: Constantes.DB_NAME)
+        Tools.copyFile(Constantes.DB_NAME, ext: ".sqlite")
 
         // Copie des CGU dans le dossier Documents de l'app
-        Tools.copyFile(fileName: Constantes.CGU_NAME)
+        Tools.copyFile(Constantes.CGU_NAME, ext: ".pdf")
 
         // Copie du fichiers des badges
-        Tools.copyFile(fileName: Constantes.BADGES_FILENAME)
+        Tools.copyFile(Constantes.BADGES_FILENAME, ext: ".json")
 
         // Permet d'upgrade la base de de données
         DatabaseManager.upgradeDatabase()
         
         // Demande d'autorisation pour envoyer des notifications
-        NotificationHandler.getInstance().requestNotificationAuthorization()
+        NotificationHandler.shared.requestNotificationAuthorization()
 
         // On démarre la timer de localisation si la collecte des données est activée
-        if LocationHandler.getInstance().locationCanBeUsed() {
-            LocationHandler.getInstance().requestLocationAuthorization()
-            CustomTimer.getInstance().startTimerLocalisation()
+        if LocationHandler.shared.locationCanBeUsed {
+            LocationHandler.shared.requestLocationAuthorization()
+            YTimer.shared.startTimerLocalisation()
 
             LocationHandler.startTrackingBadges()
         }
@@ -73,10 +71,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("App killed")
         }
 
-        if LocationHandler.getInstance().locationCanBeUsed() && UserPrefs.getInstance().bool(forKey: UserPrefs.KEY_SEND_DATA) {
-            NotificationHandler.getInstance().sendNotificationStopTracking()
-            LocationHandler.getInstance().stopLocationTracking()
-            CustomTimer.getInstance().stopTimerLocation()
+        if LocationHandler.shared.locationCanBeUsed && UserPrefs.shared.bool(forKey: .sendData) {
+            NotificationHandler.shared.sendNotificationStopTracking()
+            LocationHandler.shared.stopLocationTracking()
+            YTimer.shared.stopTimerLocation()
         }
     }
 

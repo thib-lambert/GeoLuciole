@@ -7,5 +7,6 @@ target 'Geoluciole' do
 
   # Pods for Geoluciole
 	pod 'FMDB'
+	pod 'SwiftLint'
 
 end

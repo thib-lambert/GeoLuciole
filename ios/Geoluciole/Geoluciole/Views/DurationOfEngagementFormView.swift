@@ -39,19 +39,19 @@ class DurationOfEngagementFormView: UIView {
         /*
          Récupère les dates données dans le formulaire si elles existent ou founit la date du jour. Pour la date de début et la date de fin.
          */
-        let beginDateStr = UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_START_ENGAGEMENT, defaultValue:  UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_START_STAY))
-        
-        let minimumDate = UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_START_STAY)
-        
-         let maxDate = UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_END_STAY)
+        let beginDateStr = UserPrefs.shared.string(forKey: .startDateEngagement, defaultValue: UserPrefs.shared.string(forKey: .startDayOfStay))
+
+        let minimumDate = UserPrefs.shared.string(forKey: .startDayOfStay)
+
+        let maxDate = UserPrefs.shared.string(forKey: .endDayOfStay)
         //let beginDate = Tools.convertDate(date: beginDateStr)
 
-        let endDateStr = UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_END_ENGAGEMENT, defaultValue: UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_END_STAY))
+        let endDateStr = UserPrefs.shared.string(forKey: .endDateEngagement, defaultValue: UserPrefs.shared.string(forKey: .endDayOfStay))
         //let endDate = Tools.convertDate(date: beginDateStr)
 
-        let title = CustomUILabel()
+        let title = YUILabel()
         title.text = Tools.getTranslate(key: "dates_settings")
-        title.setStyle(style: .subtitleBold)
+        title.style = .subtitleBold
         title.translatesAutoresizingMaskIntoConstraints = false
         title.textAlignment = .left
         self.addSubview(title)
@@ -68,30 +68,30 @@ class DurationOfEngagementFormView: UIView {
             var incomeDate: Date
 
             if let date = uitextview.text, date != "" {
-                incomeDate = Tools.convertDate(date: date)
+                incomeDate = Tools.convertDate(date)
             } else {
                 incomeDate = Date()
             }
 
-            let result = incomeDate.timeIntervalSince1970 <= Tools.convertDate(date: strongSelf.dateEndField.getDateLabel()).timeIntervalSince1970
+            let result = incomeDate.timeIntervalSince1970 <= Tools.convertDate(strongSelf.dateEndField.dateLabelText).timeIntervalSince1970
             if !result {
-                strongSelf.dateStartField.setDateLabel(date:  UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_START_ENGAGEMENT))
+                strongSelf.dateStartField.dateLabelText = UserPrefs.shared.string(forKey: .startDateEngagement)
             }
             return result
 
         }
-        self.dateStartField.setTitle(title: Tools.getTranslate(key: "dates_settings_start"))
-        self.dateStartField.setDateLabel(date: beginDateStr)
-        self.dateStartField.setMinimumDate(date: Tools.convertDate(date: minimumDate))
-        self.dateStartField.setMaximumDate(date: Tools.convertDate(date: maxDate))
+        self.dateStartField.title = Tools.getTranslate(key: "dates_settings_start")
+        self.dateStartField.dateLabelText = beginDateStr
+        self.dateStartField.setMinimumDate(date: Tools.convertDate(minimumDate))
+        self.dateStartField.setMaximumDate(date: Tools.convertDate(maxDate))
         self.dateStartField.setDefaultDatePicker(date: beginDateStr)
-        
+
         self.dateStartField.translatesAutoresizingMaskIntoConstraints = false
         self.dateStartField.onDateValidate = { date in
-            UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_DATE_START_ENGAGEMENT, value: Tools.convertDate(date: date))
+            UserPrefs.shared.setPrefs(key: .startDateEngagement, value: Tools.convertDate(date))
         }
         self.addSubview(dateStartField)
-        
+
         /*
          idem que dateStartField mais pour la fin d'engagement
          */
@@ -103,29 +103,28 @@ class DurationOfEngagementFormView: UIView {
             var incomeDate: Date
 
             if let date = uitextview.text, date != "" {
-                incomeDate = Tools.convertDate(date: date)
+                incomeDate = Tools.convertDate(date)
             } else {
                 incomeDate = Date()
             }
 
-            let result = incomeDate.timeIntervalSince1970 >= Tools.convertDate(date: strongSelf.dateStartField.getDateLabel()).timeIntervalSince1970
+            let result = incomeDate.timeIntervalSince1970 >= Tools.convertDate(strongSelf.dateStartField.dateLabelText).timeIntervalSince1970
             if !result {
-                strongSelf.dateEndField.setDateLabel(date:  UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_END_ENGAGEMENT))
+                strongSelf.dateEndField.dateLabelText = UserPrefs.shared.string(forKey: .endDateEngagement)
             }
             return result
-
         }
-        self.dateEndField.setMinimumDate(date: Tools.convertDate(date: minimumDate))
-        self.dateEndField.setMaximumDate(date: Tools.convertDate(date: maxDate))
+        self.dateEndField.setMinimumDate(date: Tools.convertDate(minimumDate))
+        self.dateEndField.setMaximumDate(date: Tools.convertDate(maxDate))
         self.dateEndField.setDefaultDatePicker(date: endDateStr)
-        self.dateEndField.setDateLabel(date: endDateStr)
-        self.dateEndField.setTitle(title: Tools.getTranslate(key: "dates_settings_end"))
+        self.dateEndField.dateLabelText = endDateStr
+        self.dateEndField.title = Tools.getTranslate(key: "dates_settings_end")
         self.dateEndField.translatesAutoresizingMaskIntoConstraints = false
         self.dateEndField.onDateValidate = { date in
-            UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_DATE_END_ENGAGEMENT, value: Tools.convertDate(date: date))
+            UserPrefs.shared.setPrefs(key: .endDateEngagement, value: Tools.convertDate(date))
         }
         self.addSubview(dateEndField)
-        
+
         NSLayoutConstraint.activate([
 
             self.bottomAnchor.constraint(equalTo: dateStartField.bottomAnchor),
@@ -145,17 +144,17 @@ class DurationOfEngagementFormView: UIView {
             self.dateEndField.leftAnchor.constraint(equalTo: dateStartField.rightAnchor),
             self.dateEndField.rightAnchor.constraint(equalTo: self.rightAnchor)
         ])
-        
+
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-    
+
     func getDateStartField() -> SettingsDateFieldView {
         return self.dateStartField
     }
-    
+
     func getDateEndField() -> SettingsDateFieldView {
         return self.dateEndField
     }

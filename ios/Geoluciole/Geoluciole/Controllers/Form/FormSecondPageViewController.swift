@@ -78,6 +78,7 @@ class FormSecondPageViewController: ParentModalViewController, ButtonsPrevNextDe
             boutonsNav.rightAnchor.constraint(equalTo: self.rootView.rightAnchor, constant: -Constantes.FIELD_SPACING_HORIZONTAL),
         ])
     }
+    
     func getFormDat() -> [[String: Any]] {
         self.formData.append(["1": self.formulaire.zoneDateArrivee.dateTxtFld.textfield.text!])
         self.formData.append(["2": self.formulaire.zoneDateDepart.dateTxtFld.textfield.text!])

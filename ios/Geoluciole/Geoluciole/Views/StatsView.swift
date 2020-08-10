@@ -30,24 +30,24 @@ import UIKit
 
 class StatsView: UIView {
 
-    fileprivate var uniteMetrique: CustomUILabel!
-    fileprivate var lbTitle: CustomUILabel!
-    fileprivate var lbDistance: CustomUILabel!
+    fileprivate var uniteMetrique: YUILabel!
+    fileprivate var lbTitle: YUILabel!
+    fileprivate var lbDistance: YUILabel!
     fileprivate var wrapData: UIView!
-    fileprivate var lbValeurDist: CustomUILabel!
-    
+    fileprivate var lbValeurDist: YUILabel!
+
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.lbTitle = CustomUILabel()
+        self.lbTitle = YUILabel()
         self.lbTitle.text = Tools.getTranslate(key: "text_stats_title")
-        self.lbTitle.setStyle(style: .subtitleBold)
+        self.lbTitle.style = .subtitleBold
         self.lbTitle.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(self.lbTitle)
 
-        self.lbDistance = CustomUILabel()
+        self.lbDistance = YUILabel()
         self.lbDistance.text = Tools.getTranslate(key: "text_distance")
-        self.lbDistance.setStyle(style: .bodyRegular)
+        self.lbDistance.style = .bodyRegular
         self.lbDistance.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(self.lbDistance)
 
@@ -55,22 +55,21 @@ class StatsView: UIView {
         self.wrapData.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(self.wrapData)
 
-        self.lbValeurDist = CustomUILabel()
+        self.lbValeurDist = YUILabel()
         self.lbValeurDist.text = "0"
-        self.lbValeurDist.setStyle(style: .bodyItalic)
+        self.lbValeurDist.style = .bodyItalic
         self.lbValeurDist.translatesAutoresizingMaskIntoConstraints = false
         self.wrapData.addSubview(self.lbValeurDist)
 
-        self.uniteMetrique = CustomUILabel()
+        self.uniteMetrique = YUILabel()
         self.uniteMetrique.text = "Km"
-        self.uniteMetrique.setStyle(style: .bodyItalic)
+        self.uniteMetrique.style = .bodyItalic
         self.uniteMetrique.translatesAutoresizingMaskIntoConstraints = false
         self.wrapData.addSubview(self.uniteMetrique)
-        
+
         self.setValeurDist()
 
         NSLayoutConstraint.activate([
-
             self.bottomAnchor.constraint(equalTo: self.wrapData.bottomAnchor),
 
             self.lbTitle.topAnchor.constraint(equalTo: self.topAnchor),
@@ -99,14 +98,14 @@ class StatsView: UIView {
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-    
+
     func setValeurDist() {
-        var valeurDist = Tools.getDistStat()
-        
+        var valeurDist = Tools.statisticalDistance
+
         if valeurDist < 1000 {
             self.uniteMetrique.text = "m"
         } else {
-            valeurDist = Tools.roundDist(valeurDist / 1000, places: 2)
+            valeurDist = Tools.roundDist(valeurDist / 1000, precision: 2)
             self.uniteMetrique.text = "km"
         }
 

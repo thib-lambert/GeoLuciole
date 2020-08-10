@@ -162,7 +162,7 @@ class StatsTrophiesViewController: ParentViewController, UICollectionViewDelegat
         queue.asyncAfter(deadline: .now() + 0.4) {
 
             // Récupération des badges qui ont été obtenu
-            BadgesTable.getInstance().selectQuery([], where: [WhereCondition(onColumn: BadgesTable.IS_OBTAIN, withCondition: "1")]) { (success, queryResult, error) in
+            BadgesTable.shared.selectQuery([], where: [WhereCondition(onColumn: BadgesTable.IS_OBTAIN, withCondition: "1")]) { (success, queryResult, error) in
 
                 if let error = error {
                     if Constantes.DEBUG {

@@ -30,7 +30,7 @@ import UIKit
 
 class SettingsDateFieldView: UIView, UIGestureRecognizerDelegate {
 
-    fileprivate var titleLabel: CustomUILabel!
+    fileprivate var titleLabel: YUILabel!
     fileprivate var dateLabel: UITextView!
     fileprivate var datePicker: UIDatePicker!
     var onDateValidate: ((Date) -> Void)?
@@ -40,8 +40,8 @@ class SettingsDateFieldView: UIView, UIGestureRecognizerDelegate {
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.titleLabel = CustomUILabel()
-        self.titleLabel.setStyle(style: .bodyRegular)
+        self.titleLabel = YUILabel()
+        self.titleLabel.style = .bodyRegular
         self.titleLabel.translatesAutoresizingMaskIntoConstraints = false
         self.titleLabel.text = ""
         self.titleLabel.textAlignment = .left
@@ -56,7 +56,7 @@ class SettingsDateFieldView: UIView, UIGestureRecognizerDelegate {
         self.dateLabel.tintColor = .clear
         self.dateLabel.font = UIFont(name: "Roboto-Italic", size: 16)
         self.dateLabel.translatesAutoresizingMaskIntoConstraints = false
-        self.dateLabel.text = Tools.convertDate(date: Date())
+        self.dateLabel.text = Tools.convertDate(Date())
         self.dateLabel.isScrollEnabled = false
         self.dateLabel.isUserInteractionEnabled = false
         wrapDate.addSubview(self.dateLabel)
@@ -67,7 +67,7 @@ class SettingsDateFieldView: UIView, UIGestureRecognizerDelegate {
         //code commenté pour pour étudier la gestion du cancel dans le choix des dates - TODO
         //self.datePicker.addTarget(self, action: #selector(SettingsDateFieldView.dateChange), for: .valueChanged)
         self.datePicker.calendar = Calendar.current
-        self.datePicker.locale = Tools.getPreferredLocale()
+        self.datePicker.locale = Tools.preferredLocale
 
         //ToolBar du picker pour valider la date et fermer la vue
         let toolbar = UIToolbar()
@@ -93,7 +93,6 @@ class SettingsDateFieldView: UIView, UIGestureRecognizerDelegate {
         self.addGestureRecognizer(tapRecognizer)
 
         NSLayoutConstraint.activate([
-
             self.bottomAnchor.constraint(equalTo: wrapDate.bottomAnchor),
 
             self.titleLabel.topAnchor.constraint(equalTo: self.topAnchor),
@@ -122,8 +121,13 @@ class SettingsDateFieldView: UIView, UIGestureRecognizerDelegate {
         super.init(coder: coder)
     }
 
-    func setTitle(title: String) {
-        self.titleLabel.text = title
+    var title: String {
+        get {
+            return self.titleLabel.text ?? ""
+        }
+        set {
+            self.titleLabel.text = newValue
+        }
     }
 
     @objc fileprivate func touchOnDateField() {
@@ -143,24 +147,23 @@ class SettingsDateFieldView: UIView, UIGestureRecognizerDelegate {
         self.dateLabel.resignFirstResponder()
         if self.validationData?(self.dateLabel) ?? true {
             self.dateChange()
-            self.onDateValidate?(Tools.convertDate(date: self.dateLabel.text))
+            self.onDateValidate?(Tools.convertDate(self.dateLabel.text))
             self.setDefaultDatePicker(date: self.dateLabel!.text)
         }
 
     }
 
     @objc fileprivate func dateChange() {
-
-        self.dateLabel.text = Tools.convertDate(date: self.datePicker.date)
-
+        self.dateLabel.text = Tools.convertDate(self.datePicker.date)
     }
 
-    func getDate() -> Date {
-        return self.datePicker.date
-    }
-
-    func setDate(date: Date) {
-        self.datePicker.date = date
+    var date: Date {
+        get {
+            return self.datePicker.date
+        }
+        set {
+            return self.datePicker.date = newValue
+        }
     }
 
     func setMaximumDate(date: Date) {
@@ -171,13 +174,16 @@ class SettingsDateFieldView: UIView, UIGestureRecognizerDelegate {
         self.datePicker.minimumDate = date
     }
 
-    func setDateLabel(date: String) {
-        self.dateLabel.text = date
+    var dateLabelText: String {
+        get {
+            return self.dateLabel.text
+        }
+        set {
+            self.dateLabel.text = newValue
+        }
     }
-    func getDateLabel() -> String {
-        return self.dateLabel.text
-    }
+
     func setDefaultDatePicker(date: String) {
-        self.datePicker.setDate(Tools.convertDate(date: date), animated: false)
+        self.datePicker.setDate(Tools.convertDate(date), animated: false)
     }
 }

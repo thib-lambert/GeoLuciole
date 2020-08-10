@@ -32,26 +32,26 @@ class FormYesNoQuestion: UIView {
 
     let yesAnswer = CheckBoxFieldView()
     let noAnswer = CheckBoxFieldView()
-    let question = CustomUILabel()
+    let question = YUILabel()
 
     var isValid: Bool {
-        return self.noAnswer.isChecked() || self.yesAnswer.isChecked()
+        return self.noAnswer.checked || self.yesAnswer.checked
     }
     var selectedValue: String {
         var r: String!
-        if self.noAnswer.isChecked() {
+        if self.noAnswer.checked {
             r = self.noAnswer.optionLabel.text ?? ""
-        } else if self.yesAnswer.isChecked() {
+        } else if self.yesAnswer.checked {
             r = self.yesAnswer.optionLabel.text ?? ""
         }
         return r
     }
-    
+
     init(question: String) {
         super.init(frame: .zero)
-        
-        let questionLabel = CustomUILabel()
-        questionLabel.setStyle(style: .bodyRegular)
+
+        let questionLabel = YUILabel()
+        questionLabel.style = .bodyRegular
         questionLabel.numberOfLines = 0
         questionLabel.text = question
         questionLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -61,21 +61,21 @@ class FormYesNoQuestion: UIView {
         answersWrap.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(answersWrap)
 
-        self.yesAnswer.setTitleOption(titleOption: Tools.getTranslate(key: "action_yes"))
+        self.yesAnswer.titleOption = Tools.getTranslate(key: "action_yes")
         self.yesAnswer.translatesAutoresizingMaskIntoConstraints = false
-        self.yesAnswer.setStyle(style: .circle)
+        self.yesAnswer.style = .circle
         self.yesAnswer.onCheckChange = { [weak self] checkBox in
             guard let strongSelf = self else { return }
-            strongSelf.changeCheck(CheckBox: checkBox)
+            strongSelf.changeCheck(checkBox: checkBox)
         }
         answersWrap.addSubview(self.yesAnswer)
 
-        self.noAnswer.setTitleOption(titleOption: Tools.getTranslate(key: "action_no"))
-        self.noAnswer.setStyle(style: .circle)
+        self.noAnswer.titleOption = Tools.getTranslate(key: "action_no")
+        self.noAnswer.style = .circle
         self.noAnswer.translatesAutoresizingMaskIntoConstraints = false
         self.noAnswer.onCheckChange = { [weak self] checkBox in
             guard let strongSelf = self else { return }
-            strongSelf.changeCheck(CheckBox: checkBox)
+            strongSelf.changeCheck(checkBox: checkBox)
         }
         answersWrap.addSubview(self.noAnswer)
 
@@ -107,14 +107,9 @@ class FormYesNoQuestion: UIView {
         super.init(coder: coder)
     }
 
-    fileprivate func changeCheck(CheckBox: CheckBoxFieldView) {
-        if CheckBox == self.yesAnswer {
-            self.yesAnswer.setChecked(checked: true)
-            self.noAnswer.setChecked(checked: false)
-        }
-        if CheckBox == self.noAnswer {
-            self.yesAnswer.setChecked(checked: false)
-            self.noAnswer.setChecked(checked: true)
-        }
+    fileprivate func changeCheck(checkBox: CheckBoxFieldView) {
+        let val = checkBox == self.yesAnswer
+        self.yesAnswer.checked = val
+        self.noAnswer.checked = !val
     }
 }

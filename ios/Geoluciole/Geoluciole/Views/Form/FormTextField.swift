@@ -33,7 +33,7 @@ class FormTextField: UIView, UITextFieldDelegate {
     fileprivate var subLine: UIView!
     var textfield: UITextField!
     var validationData: ((UITextField) -> Bool)?
-    var isValid: Bool = false
+    var isValid = false
 
     init(placeholder: String, keyboardType: UIKeyboardType) {
 

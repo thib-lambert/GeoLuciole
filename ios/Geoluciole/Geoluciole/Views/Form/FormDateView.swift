@@ -52,16 +52,16 @@ class FormDateView: UIView {
             var incomeDate: Date
 
             if let date = textfield.text, date != "" {
-                incomeDate = Tools.convertDate(date: date)
+                incomeDate = Tools.convertDate(date)
             } else if let placeholder = textfield.placeholder, placeholder != "" {
-                incomeDate = Tools.convertDate(date: placeholder)
+                incomeDate = Tools.convertDate(placeholder)
             } else {
                 incomeDate = Date()
             }
             
             let result = incomeDate.timeIntervalSince1970 <= strongSelf.zoneDateDepart.date.timeIntervalSince1970
             if result {
-                UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_DATE_START_STAY, value: Tools.convertDate(date: incomeDate))
+                UserPrefs.shared.setPrefs(key: .startDayOfStay, value: Tools.convertDate(incomeDate))
 
             }
             return result
@@ -79,16 +79,16 @@ class FormDateView: UIView {
             var incomeDate: Date
 
             if let date = textfield.text, date != "" {
-                incomeDate = Tools.convertDate(date: date)
+                incomeDate = Tools.convertDate(date)
             } else if let placeholder = textfield.placeholder, placeholder != "" {
-                incomeDate = Tools.convertDate(date: placeholder)
+                incomeDate = Tools.convertDate(placeholder)
             } else {
                 incomeDate = Date()
             }
 
             let result = incomeDate.timeIntervalSince1970 >= strongSelf.zoneDateArrivee.date.timeIntervalSince1970
             if result {
-                UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_DATE_END_STAY, value: Tools.convertDate(date: incomeDate))
+                UserPrefs.shared.setPrefs(key: .endDayOfStay, value: Tools.convertDate(incomeDate))
 
             }
             return result
@@ -96,7 +96,6 @@ class FormDateView: UIView {
         self.addSubview(zoneDateDepart)
 
         NSLayoutConstraint.activate([
-
             self.zoneDateArrivee.topAnchor.constraint(equalTo: self.topAnchor),
             self.zoneDateArrivee.rightAnchor.constraint(equalTo: self.rightAnchor),
             self.zoneDateArrivee.leftAnchor.constraint(equalTo: self.leftAnchor),

@@ -30,7 +30,7 @@ import UIKit
 class CheckBoxFieldView: UIView, UIGestureRecognizerDelegate {
 
     fileprivate var checkbox: CheckBoxView!
-    var optionLabel: CustomUILabel!
+    var optionLabel: YUILabel!
     var onCheckChange: ((CheckBoxFieldView) -> Void)?
 
     override init(frame: CGRect) {
@@ -43,10 +43,10 @@ class CheckBoxFieldView: UIView, UIGestureRecognizerDelegate {
         self.checkbox.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(self.checkbox)
 
-        self.optionLabel = CustomUILabel()
+        self.optionLabel = YUILabel()
         self.optionLabel.numberOfLines = 0
         self.optionLabel.textAlignment = .justified
-        self.optionLabel.setStyle(style: .bodyItalic)
+        self.optionLabel.style = .bodyItalic
         self.optionLabel.translatesAutoresizingMaskIntoConstraints = false
         self.optionLabel.text = ""
         self.addSubview(self.optionLabel)
@@ -78,40 +78,73 @@ class CheckBoxFieldView: UIView, UIGestureRecognizerDelegate {
         super.init(coder: coder)
     }
 
-    func isChecked() -> Bool {
-        return self.checkbox.isChecked
+    var checked: Bool {
+        get {
+            return self.checkbox.isChecked
+        }
+
+        set {
+            self.checkbox.isChecked = newValue
+        }
     }
 
-    func setTitleOption(titleOption: String) {
-        self.optionLabel.text = titleOption
+    var titleOption: String {
+        get {
+            return self.optionLabel!.text ?? ""
+        }
+
+        set(titleOption) {
+            self.optionLabel.text = titleOption
+        }
     }
 
     @objc fileprivate func touchOnCheckBox() {
-        self.setChecked(checked: !self.isChecked())
+        self.checked = !self.checked
         self.onCheckChange?(self)
     }
 
-    func setChecked(checked: Bool) {
-        self.checkbox.isChecked = checked
+    var style: CheckBoxView.Style {
+        get {
+            return self.checkbox.style
+        }
+        set {
+            self.checkbox.style = newValue
+        }
     }
 
-    func setStyle(style: CheckBoxView.Style) {
-        self.checkbox.style = style
+    var borderStyle: CheckBoxView.BorderStyle {
+        get {
+            return self.checkbox.borderStyle
+        }
+        set {
+            self.checkbox.borderStyle = newValue
+        }
     }
 
-    func setBorderStyle(style: CheckBoxView.BorderStyle) {
-        self.checkbox.borderStyle = style
+    var checkmarkColor: UIColor {
+        get {
+            return self.checkbox.checkmarkColor
+        }
+        set {
+            self.checkbox.checkmarkColor = newValue
+        }
     }
 
-    func setCheckmarkColor(color: UIColor) {
-        self.checkbox.checkmarkColor = color
+    var checkedBorderColor: UIColor {
+        get {
+            return self.checkbox.checkedBorderColor
+        }
+        set {
+            self.checkbox.checkedBorderColor = newValue
+        }
     }
 
-    func setCheckedBorderColor(color: UIColor) {
-        self.checkbox.checkedBorderColor = color
-    }
-
-    func setUncheckedBorderColor(color: UIColor) {
-        self.checkbox.uncheckedBorderColor = color
+    var uncheckedBorderColor: UIColor {
+        get {
+            return self.checkbox.uncheckedBorderColor
+        }
+        set {
+            self.checkbox.uncheckedBorderColor = newValue
+        }
     }
 }

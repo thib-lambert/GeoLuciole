@@ -30,7 +30,7 @@ import UserNotifications
 
 class NotificationHandler: NSObject, UNUserNotificationCenterDelegate {
 
-    fileprivate static var INSTANCE: NotificationHandler!
+    static var shared = NotificationHandler()
     fileprivate var userNotificationCenter: UNUserNotificationCenter
 
     fileprivate override init() {
@@ -39,21 +39,13 @@ class NotificationHandler: NSObject, UNUserNotificationCenterDelegate {
         self.userNotificationCenter.delegate = self
     }
 
-    static func getInstance() -> NotificationHandler {
-        if INSTANCE == nil {
-            INSTANCE = NotificationHandler()
-        }
-
-        return INSTANCE
-    }
-
     /// Demande l'autorisation d'envoyer des notifications à l'utilisateur
     func requestNotificationAuthorization() {
         // On définit les élements que l'on veut utiliser pour les notifications
         let authOptions = UNAuthorizationOptions.init(arrayLiteral: .alert, .sound)
 
         self.userNotificationCenter.requestAuthorization(options: authOptions) { (success, error) in
-            if let error = error {
+            if let error = error, Constantes.DEBUG {
                 print("Erreur lors de l'autorisation des notifications : \(error)")
             }
         }

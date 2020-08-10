@@ -30,10 +30,10 @@ import UIKit
 
 /// Classe permettant d'afficher le loader luciole
 class LoaderView: UIImageView {
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         self.animationImages = [
             UIImage(named: "loader_0")!,
             UIImage(named: "loader_45")!,
@@ -55,16 +55,16 @@ class LoaderView: UIImageView {
         self.contentMode = .scaleAspectFill
         self.animationDuration = TimeInterval(Double(self.animationImages!.count) / 30.0)
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
-    
+
     override func startAnimating() {
         self.isHidden = false
         super.startAnimating()
     }
-    
+
     override func stopAnimating() {
         super.stopAnimating()
         self.isHidden = true

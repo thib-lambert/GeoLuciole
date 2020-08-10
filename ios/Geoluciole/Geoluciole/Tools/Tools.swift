@@ -32,17 +32,27 @@ import CoreLocation
 class Tools {
 
     /// Permet de trouver le chemin pour le fichier passé en paramètre
-    static func getPath(_ fileName: String) -> String {
-
+    ///
+    /// - Parameters:
+    ///     - filename: Le nom du fichier à trouver
+    ///     - ext: L'extension du fichier à trouver
+    ///
+    /// - Returns: Le chemin du fichier
+    static func getPath(_ fileName: String, ext: String) -> String {
         let documentsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-        let fileURL = documentsURL.appendingPathComponent(fileName)
+        let file = fileName + "." + ext
+        let fileURL = documentsURL.appendingPathComponent(file)
 
         return fileURL.path
     }
 
     /// Permet de copier un fichier du Bundle de l'application vers le dossier Documents de l'application
-    static func copyFile(fileName: String) {
-        let dbPath: String = getPath(fileName as String)
+    ///
+    /// - Parameters:
+    ///     - filename: Le nom du fichier à copier
+    ///     - ext: L'extension du fichier à copier
+    static func copyFile(_ fileName: String, ext: String) {
+        let dbPath = Tools.getPath(fileName, ext: ext)
         let fileManager = FileManager.default
         if !fileManager.fileExists(atPath: dbPath) {
 
@@ -93,28 +103,28 @@ class Tools {
         return s
     }
 
-    static func getStatusBarHeight() -> CGFloat {
+    static var statusBarHeight: CGFloat {
         return UIApplication.shared.statusBarFrame.height
     }
 
-    static func getAppName() -> String {
+    static var appName: String {
         return Bundle.main.infoDictionary![kCFBundleNameKey as String] as! String
     }
 
-    static func getScreenWidth() -> CGFloat {
+    static var screenWidth: CGFloat {
         return UIScreen.main.bounds.width
     }
 
-    static func getScreenHeight() -> CGFloat {
+    static var screenHeight: CGFloat {
         return UIScreen.main.bounds.height
     }
 
     /// Retourne l'identifiant de l'utilisateur
-    static func getIdentifier() -> Int {
+    static var userIdentifier: Int {
         var identifier: Int
 
         // On vérifie si on a un identifiant de généré
-        let id = UserPrefs.getInstance().int(forKey: UserPrefs.KEY_IDENTIFIER)
+        let id = UserPrefs.shared.int(forKey: .identifier)
 
         // Si oui, on le récupère
         if id != 0 {
@@ -134,19 +144,19 @@ class Tools {
             identifier = Int(abs(uuid!.hashCode()))
 
             // et on sauvegarde le paramètre
-            UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_IDENTIFIER, value: identifier)
+            UserPrefs.shared.setPrefs(key: .identifier, value: identifier)
         }
 
         return identifier
     }
 
-    static func convertDate(date: String) -> Date {
+    static func convertDate(_ date: String) -> Date {
         let df = DateFormatter()
         df.dateFormat = "dd/MM/yyyy HH:mm"
         return df.date(from: date)!
     }
 
-    static func convertDateGMT01(date: String) -> Date {
+    static func convertDateGMT01(_ date: String) -> Date {
         let df = DateFormatter()
         df.timeZone = NSTimeZone(name: "UTC") as TimeZone?
 
@@ -160,21 +170,21 @@ class Tools {
         return df.date(from: date)!
     }
 
-    static func convertDate(date: Date) -> String {
+    static func convertDate(_ date: Date) -> String {
         let df = DateFormatter()
         df.dateFormat = "dd/MM/yyyy HH:mm"
         return df.string(from: date)
     }
 
     // Retourne une date au format date du serveur pour faciliter la lecture
-    static func convertDateToServerDate(date: Date) -> String {
+    static func convertDateToServerDate(_ date: Date) -> String {
         let df = DateFormatter()
         df.dateFormat = "yyyy/MM/dd HH:mm:ss"
         return df.string(from: date)
     }
 
-    static func getDistStat() -> Double {
-        guard let dist_parcourue = UserPrefs.getInstance().object(forKey: UserPrefs.KEY_DISTANCE_TRAVELED) as? Double else {
+    static var statisticalDistance: Double {
+        guard let dist_parcourue = UserPrefs.shared.object(forKey: .distanceTraveled) as? Double else {
             return 0
         }
 
@@ -182,16 +192,16 @@ class Tools {
             print("Distance parcourue :\(dist_parcourue)")
         }
 
-        return roundDist(dist_parcourue, places: 2)
+        return Tools.roundDist(dist_parcourue, precision: 2)
     }
 
-    static func roundDist(_ value: Double, places: Int) -> Double {
-        let divisor = pow(10.0, Double(places))
+    static func roundDist(_ value: Double, precision: Int) -> Double {
+        let divisor = pow(10.0, Double(precision))
 
         return round(value * divisor) / divisor
     }
 
-    static func getPreferredLocale() -> Locale {
+    static var preferredLocale: Locale {
         guard let preferredIdentifier = Locale.preferredLanguages.first else {
             return Locale.current
         }
@@ -204,28 +214,26 @@ class Tools {
 
     /// Vérifie que les consentements ont été acceptés et lance le processus de consentement si non effectué
     static func checkConsent(viewController: ParentViewController) {
-        let consent_gps = UserPrefs.getInstance().object(forKey: UserPrefs.KEY_RGPD_CONSENT)
+        let consentGPS = UserPrefs.shared.object(forKey: .rgpdConsent)
 
         // On affiche le consentement de RGPD pour le GPS
-        if consent_gps == nil {
+        if consentGPS == nil {
             let rgpdController = GPSConsentRGPDViewController()
             rgpdController.modalPresentationStyle = .fullScreen
             viewController.present(rgpdController, animated: true)
         } else {
-            if let consent = consent_gps as? Bool {
-                if consent {
-                    // On affiche ensuite le constement pour le formulaire
-                    if UserPrefs.getInstance().object(forKey: UserPrefs.KEY_FORMULAIRE_CONSENT) == nil {
-                        let formRgpdController = FormConsentRGPDViewController()
-                        formRgpdController.modalPresentationStyle = .fullScreen
-                        viewController.present(formRgpdController, animated: true)
-                    } else {
-                        // On affiche le formulaire
-                        if UserPrefs.getInstance().object(forKey: UserPrefs.KEY_FORMULAIRE_REMPLI) == nil {
-                            let formulaire = FormPageViewController()
-                            formulaire.modalPresentationStyle = .fullScreen
-                            viewController.present(formulaire, animated: true)
-                        }
+            if consentGPS as! Bool {
+                // On affiche ensuite le constement pour le formulaire
+                if UserPrefs.shared.object(forKey: .consentForm) == nil {
+                    let formRgpdController = FormConsentRGPDViewController()
+                    formRgpdController.modalPresentationStyle = .fullScreen
+                    viewController.present(formRgpdController, animated: true)
+                } else {
+                    // On affiche le formulaire
+                    if UserPrefs.shared.object(forKey: .completedForm) == nil {
+                        let formulaire = FormPageViewController()
+                        formulaire.modalPresentationStyle = .fullScreen
+                        viewController.present(formulaire, animated: true)
                     }
                 }
             }

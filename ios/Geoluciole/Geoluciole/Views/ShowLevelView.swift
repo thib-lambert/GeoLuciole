@@ -30,18 +30,18 @@ import UIKit
 
 class ShowLevelView: UIView {
 
-    fileprivate var levelNumberLabel: CustomUILabel!
+    fileprivate var levelNumberLabel: YUILabel!
     fileprivate var progressBar: UIProgressView!
     fileprivate let progressBarHeight: CGFloat = 15
-    var onProgressBarFinish: (()-> Void)?
+    var onProgressBarFinish: (() -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
+
         // Label indiquant le niveau
-        self.levelNumberLabel = CustomUILabel()
+        self.levelNumberLabel = YUILabel()
         self.levelNumberLabel.text = Tools.getTranslate(key: "stay_progression")
-        self.levelNumberLabel.setStyle(style: .subtitleBold)
+        self.levelNumberLabel.style = .subtitleBold
         self.levelNumberLabel.translatesAutoresizingMaskIntoConstraints = false
         self.levelNumberLabel.textAlignment = .left
         self.addSubview(self.levelNumberLabel)
@@ -71,10 +71,15 @@ class ShowLevelView: UIView {
         ])
     }
 
-    func setProgress(value: Float) {
-        self.progressBar.progress = value
-        if self.progressBar.progress >= 1 {
-            self.onProgressBarFinish?()
+    var progress: Float {
+        get {
+            return self.progressBar.progress
+        }
+        set {
+            self.progressBar.progress = newValue
+            if self.progressBar.progress >= 1 {
+                self.onProgressBarFinish?()
+            }
         }
     }
 

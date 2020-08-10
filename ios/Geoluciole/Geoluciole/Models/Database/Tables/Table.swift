@@ -37,7 +37,6 @@ class Table {
 
     var tableName: String = ""
     var columns: [TableColumn] = []
-    fileprivate let db = DatabaseManager.getInstance()
 
     func prepareSQLForCreateTable() -> String {
         var sqlRequest = "CREATE TABLE IF NOT EXISTS"
@@ -82,11 +81,11 @@ class Table {
                     }
                 }
 
-                if !self.db.isOpen {
-                    self.db.open()
+                if !DatabaseManager.shared.isOpen {
+                    DatabaseManager.shared.open()
                 }
 
-                let result = try self.db.executeQuery(sql, values: values)
+                let result = try DatabaseManager.shared.executeQuery(sql, values: values)
 
                 while result.next() {
                     var data = [String: Any]()
@@ -98,13 +97,13 @@ class Table {
                 }
 
                 completion(true, queryResult, nil)
-                self.db.close()
+                DatabaseManager.shared.close()
             } catch {
                 if Constantes.DEBUG {
                     print("SELECT ERROR " + self.tableName + " : " + error.localizedDescription)
                 }
                 completion(false, [], error)
-                self.db.close()
+                DatabaseManager.shared.close()
             }
         }
     }
@@ -123,19 +122,19 @@ class Table {
             sql += Tools.joinWithCharacter(nil, ",", allKeys) + ") VALUES (" + sqlValues + ")"
 
             do {
-                if !self.db.isOpen {
-                    self.db.open()
+                if !DatabaseManager.shared.isOpen {
+                    DatabaseManager.shared.open()
                 }
 
-                let success = self.db.executeUpdate(sql, withParameterDictionary: arguments)
+                let success = DatabaseManager.shared.executeUpdate(sql, withParameterDictionary: arguments)
 
                 if !success {
                     if Constantes.DEBUG {
-                        print("INSERT ERROR " + self.tableName + " : " + self.db.lastErrorMessage())
+                        print("INSERT ERROR " + self.tableName + " : " + DatabaseManager.shared.lastErrorMessage())
                     }
                 }
 
-                self.db.close()
+                DatabaseManager.shared.close()
             }
         }
     }
@@ -143,26 +142,26 @@ class Table {
     func deleteQuery() {
         DatabaseManager.sharedQueue.inDeferredTransaction { (db, rollback) in
             do {
-                if !self.db.isOpen {
-                    self.db.open()
+                if !DatabaseManager.shared.isOpen {
+                    DatabaseManager.shared.open()
                 }
 
                 let sql = "DELETE FROM " + self.tableName
-                try self.db.executeUpdate(sql, values: [])
-                self.db.close()
+                try DatabaseManager.shared.executeUpdate(sql, values: [])
+                DatabaseManager.shared.close()
             } catch {
                 if Constantes.DEBUG {
                     print("DELETE ERROR " + self.tableName + " : " + error.localizedDescription)
                 }
-                self.db.close()
+                DatabaseManager.shared.close()
             }
         }
     }
 
-    func updateQuery(updateConditions:[UpdateConditions], where whereConditions: [WhereCondition]? = nil, completion: Completion) {
+    func updateQuery(updateConditions: [UpdateConditions], where whereConditions: [WhereCondition]? = nil, completion: Completion) {
 
         var sql = "UPDATE " + self.tableName
-        
+
         var values = [Any]()
         if !updateConditions.isEmpty {
             sql += " SET"
@@ -172,7 +171,7 @@ class Table {
                 sql += (index == updateConditions.count - 1) ? "" : ","
             }
         }
-        
+
         if let whereConditions = whereConditions, !whereConditions.isEmpty {
             sql += " WHERE"
             for (index, condition) in whereConditions.enumerated() {
@@ -184,16 +183,16 @@ class Table {
 
         DatabaseManager.sharedQueue.inDeferredTransaction { (db, rollback) in
             do {
-                if !self.db.isOpen {
-                    self.db.open()
+                if !DatabaseManager.shared.isOpen {
+                    DatabaseManager.shared.open()
                 }
-                try self.db.executeUpdate(sql, values: values)
+                try DatabaseManager.shared.executeUpdate(sql, values: values)
                 completion(true, nil)
-                self.db.close()
+                DatabaseManager.shared.close()
             } catch {
                 print("failed: \(error.localizedDescription)")
                 completion(false, error)
-                self.db.close()
+                DatabaseManager.shared.close()
             }
         }
     }

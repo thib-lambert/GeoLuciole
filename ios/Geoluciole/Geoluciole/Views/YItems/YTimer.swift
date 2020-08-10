@@ -30,19 +30,11 @@ import UIKit
 
 class YTimer {
 
-    fileprivate static var INSTANCE: YTimer!
+    static var shared = YTimer()
     fileprivate var timer: Timer?
 
     fileprivate init() {
 
-    }
-
-    static func getInstance() -> YTimer {
-        if INSTANCE == nil {
-            INSTANCE = YTimer()
-        }
-
-        return INSTANCE
     }
 
     // Lancement du timer pour déclencher l'envoi des données de localisation au serveur
@@ -72,7 +64,7 @@ class YTimer {
         // création du message à envoyer
 
         // récupération des localisations en BDD SQLite
-        LocationTable.getInstance().selectQuery { (success, result, error) in
+        LocationTable.shared.selectQuery { (success, result, error) in
             if result.count > 0 {
                 var locations = [[String: Any]]()
 
@@ -80,13 +72,13 @@ class YTimer {
                 for location in result {
                     let loc = Location(latitude: location[LocationTable.LATITUDE] as! Double, longitude: location[LocationTable.LONGITUDE] as! Double, altitude: location[LocationTable.ALTITUDE] as! Double, timestamp: location[LocationTable.TIMESTAMP] as! Double, precision: location[LocationTable.PRECISION] as! Double, vitesse: location[LocationTable.VITESSE] as! Double, date_str: location[LocationTable.DATE] as! String)
 
-                    locations.append(loc.toDictionary())
+                    locations.append(loc.toDictionary)
                 }
 
                 // Si le tableau n'est pas vide, on envoi notre message
                 if locations.count > 0 {
-                    let message: String = ElasticSearchAPI.getInstance().generateMessage(content: locations, needBulk: true, addInfoDevice: false)
-                    ElasticSearchAPI.getInstance().postLocations(message: message, viewController: viewController)
+                    let message: String = ElasticSearchAPI.shared.generateMessage(content: locations, needBulk: true, addInfoDevice: false)
+                    ElasticSearchAPI.shared.postLocations(message: message, viewController: viewController)
                 }
             } else {
                 DispatchQueue.main.async {

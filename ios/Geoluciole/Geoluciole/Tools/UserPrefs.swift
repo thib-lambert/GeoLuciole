@@ -29,56 +29,58 @@ import Foundation
 
 class UserPrefs {
 
-    fileprivate static var INSTANCE: UserPrefs!
+    enum UPKeys: String {
+        case durationOfEngagement = "duree_engagement"
+        case engagementType = "type_engagement"
+        case sendData = "send_data"
+        case lastPosition = "last_point"
+        case distanceTraveled = "distance"
+        case identifier = "identifier"
+        case rgpdConsent = "rgpd_consent"
+        case consentForm = "formulaire_consent"
+        case startDateEngagement = "date_start_engagement"
+        case endDateEngagement = "date_end_engagement"
+        case appleLanguage = "AppleLanguages"
+        case lastBadgeObtained = "last_badge"
+        case completedForm = "formulaire_accepte"
+        case dataGPSConsent = "data_gps_consent"
+        case dataFormConsent = "data_form_consent"
+        case startDayOfStay = "date_debut_sejour"
+        case endDayOfStay = "date_fin_sejour"
+        case consentAsk = "consent_ask"
+    }
+
+    public static var shared = UserPrefs()
     fileprivate var userPrefs = UserDefaults.standard
 
-    static let KEY_DUREE_ENGAGEMENT = "duree_engagement"
-    static let KEY_TYPE_ENGAGEMENT = "type_engagement"
-    static let KEY_SEND_DATA = "send_data"
-    static let KEY_LAST_POINT = "last_point"
-    static let KEY_DISTANCE_TRAVELED = "distance"
-    static let KEY_IDENTIFIER = "identifier"
-    static let KEY_RGPD_CONSENT = "rgpd_consent"
-    static let KEY_FORMULAIRE_CONSENT = "formulaire_consent"
-    static let KEY_DATE_START_ENGAGEMENT = "date_start_engagement"
-    static let KEY_DATE_END_ENGAGEMENT = "date_end_engagement"
-    static let APPLE_LANGUAGE_KEY = "AppleLanguages"
-    static let KEY_LAST_BADGE = "last_badge"
-    static let KEY_FORMULAIRE_REMPLI = "formulaire_accepte"
-    static let KEY_GPS_CONSENT_DATA = "data_gps_consent"
-    static let KEY_FORMULAIRE_CONSENT_DATA = "data_form_consent"
-    static let KEY_DATE_START_STAY = "date_debut_sejour"
-    static let KEY_DATE_END_STAY = "date_fin_sejour"
-    static let KEY_CONSENT_ASK = "consent_ask"
-
     fileprivate init() {
-//initialisation par defaut des dates de séjour pour le cas de refus des consentement GPS
-        
-        if self.userPrefs.object(forKey: UserPrefs.KEY_DATE_START_STAY) == nil {
-            self.setPrefs(key: UserPrefs.KEY_DATE_START_STAY, value: Tools.convertDate(date: Date()))
+        //initialisation par defaut des dates de séjour pour le cas de refus des consentement GPS
+
+        if self.userPrefs.object(forKey: UPKeys.startDayOfStay.rawValue) == nil {
+            self.setPrefs(key: .startDayOfStay, value: Tools.convertDate(Date()))
         }
 
-        if self.userPrefs.object(forKey: UserPrefs.KEY_DATE_END_STAY) == nil {
-            self.setPrefs(key: UserPrefs.KEY_DATE_END_STAY, value: Tools.convertDate(date: Date()))
+        if self.userPrefs.object(forKey: UPKeys.endDayOfStay.rawValue) == nil {
+            self.setPrefs(key: .endDayOfStay, value: Tools.convertDate(Date()))
         }
 
         // si la durée d'engagement est renseigné
-        if self.userPrefs.object(forKey: UserPrefs.KEY_DUREE_ENGAGEMENT) == nil {
-            self.setPrefs(key: UserPrefs.KEY_DUREE_ENGAGEMENT, value: 1)
+        if self.userPrefs.object(forKey: UPKeys.durationOfEngagement.rawValue) == nil {
+            self.setPrefs(key: .durationOfEngagement, value: 1)
         }
 
         // si le type d'engagement est renseigné 0:heure 1:jour
-        if self.userPrefs.object(forKey: UserPrefs.KEY_TYPE_ENGAGEMENT) == nil {
-            self.setPrefs(key: UserPrefs.KEY_TYPE_ENGAGEMENT, value: 0)
+        if self.userPrefs.object(forKey: UPKeys.engagementType.rawValue) == nil {
+            self.setPrefs(key: .engagementType, value: 0)
         }
 
         // Par défaut, on active pas la collecte de données
-        if self.userPrefs.object(forKey: UserPrefs.KEY_SEND_DATA) == nil {
-            self.setPrefs(key: UserPrefs.KEY_SEND_DATA, value: false)
+        if self.userPrefs.object(forKey: UPKeys.sendData.rawValue) == nil {
+            self.setPrefs(key: .sendData, value: false)
         }
 
         // Si la langue n'est pas définit, on prend la langue du système par défaut
-        if self.userPrefs.object(forKey: UserPrefs.APPLE_LANGUAGE_KEY) == nil {
+        if self.userPrefs.object(forKey: UPKeys.appleLanguage.rawValue) == nil {
             // on récupère la langue du système
             let languageCode = Locale.current.regionCode?.lowercased()
 
@@ -93,60 +95,53 @@ class UserPrefs {
                     language = Tools.getTranslate(key: "english_language")
                 }
             }
-            self.setPrefs(key: UserPrefs.APPLE_LANGUAGE_KEY, value: language)
+            self.setPrefs(key: .appleLanguage, value: language)
         }
-        
+
         // indique si l'on a affiché le consentement GPS au moins une fois au démarrage de l'application
-        if self.userPrefs.object(forKey: UserPrefs.KEY_CONSENT_ASK) == nil {
-            self.setPrefs(key: UserPrefs.KEY_CONSENT_ASK, value: false)
+        if self.userPrefs.object(forKey: UPKeys.consentAsk.rawValue) == nil {
+            self.setPrefs(key: .consentAsk, value: false)
         }
     }
 
-    static func getInstance() -> UserPrefs {
-        if INSTANCE == nil {
-            INSTANCE = UserPrefs()
-        }
-        return INSTANCE
-    }
-
-    func setPrefs(key: String, value: Any) {
-        self.userPrefs.set(value, forKey: key)
+    func setPrefs(key: UPKeys, value: Any) {
+        self.userPrefs.set(value, forKey: key.rawValue)
         self.userPrefs.synchronize()
     }
 
-    func removePrefs(key: String) {
-        self.userPrefs.removeObject(forKey: key)
+    func removePrefs(key: UPKeys) {
+        self.userPrefs.removeObject(forKey: key.rawValue)
         self.userPrefs.synchronize()
     }
 
-    func bool(forKey key: String, defaultValue: Bool = false) -> Bool {
-        if self.userPrefs.object(forKey: key) != nil {
-            return self.userPrefs.bool(forKey: key)
+    func bool(forKey key: UPKeys, defaultValue: Bool = false) -> Bool {
+        if self.userPrefs.object(forKey: key.rawValue) != nil {
+            return self.userPrefs.bool(forKey: key.rawValue)
         }
         return defaultValue
     }
 
-    func string(forKey key: String, defaultValue: String = "") -> String {
-        if self.userPrefs.object(forKey: key) != nil {
-            return self.userPrefs.string(forKey: key)!
+    func string(forKey key: UPKeys, defaultValue: String = "") -> String {
+        if self.userPrefs.object(forKey: key.rawValue) != nil {
+            return self.userPrefs.string(forKey: key.rawValue)!
         }
         return defaultValue
     }
 
-    func int(forKey key: String, defaultValue: Int = 0) -> Int {
-        if self.userPrefs.object(forKey: key) != nil {
-            return self.userPrefs.integer(forKey: key)
+    func int(forKey key: UPKeys, defaultValue: Int = 0) -> Int {
+        if self.userPrefs.object(forKey: key.rawValue) != nil {
+            return self.userPrefs.integer(forKey: key.rawValue)
         }
         return defaultValue
     }
 
-    func object(forKey key: String) -> Any? {
-        return self.userPrefs.object(forKey: key)
+    func object(forKey key: UPKeys) -> Any? {
+        return self.userPrefs.object(forKey: key.rawValue)
     }
 
-    func double(forKey key: String, defaultValue: Double = 0) -> Double {
-        if self.userPrefs.object(forKey: key) != nil {
-            return self.userPrefs.double(forKey: key)
+    func double(forKey key: UPKeys, defaultValue: Double = 0) -> Double {
+        if self.userPrefs.object(forKey: key.rawValue) != nil {
+            return self.userPrefs.double(forKey: key.rawValue)
         }
         return defaultValue
     }

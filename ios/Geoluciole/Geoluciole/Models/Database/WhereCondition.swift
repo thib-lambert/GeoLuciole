@@ -32,8 +32,8 @@ class WhereCondition {
     var column: String!
     var value: Any!
 
-    init(onColumn: String, withCondition: Any) {
+    init(onColumn: String, withCondition: Any?) {
         self.column = onColumn
-        self.value = withCondition
+        self.value = withCondition ?? NSNull()
     }
 }

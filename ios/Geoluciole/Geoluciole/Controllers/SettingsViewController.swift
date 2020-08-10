@@ -110,7 +110,7 @@ class SettingsViewController: ParentViewController {
             let queue = DispatchQueue(label: "SendData", qos: .background)
 
             queue.async {
-                YTimer.getInstance().sendPostLocationElasticSearch(viewController: strongSelf)
+                YTimer.shared.sendPostLocationElasticSearch(viewController: strongSelf)
             }
 
         }
@@ -211,9 +211,9 @@ class SettingsViewController: ParentViewController {
         let dateFinStr = UserPrefs.shared.string(forKey: .endDateEngagement, defaultValue: UserPrefs.UPKeys.endDayOfStay.rawValue)
 
         self.durationOfEngagementFormView.getDateStartField().setDefaultDatePicker(date: dateDebutStr)
-        self.durationOfEngagementFormView.getDateStartField().setDateLabel(date: dateDebutStr)
+        self.durationOfEngagementFormView.getDateStartField().dateLabelText = dateDebutStr
         self.durationOfEngagementFormView.getDateEndField().setDefaultDatePicker(date: dateFinStr)
-        self.durationOfEngagementFormView.getDateEndField().setDateLabel(date: dateFinStr)
+        self.durationOfEngagementFormView.getDateEndField().dateLabelText = dateFinStr
 
         Tools.checkConsent(viewController: self)
     }

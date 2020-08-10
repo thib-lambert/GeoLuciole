@@ -30,14 +30,14 @@ import UIKit
 
 class BadgesCollectionViewCell: UICollectionViewCell {
 
-    fileprivate var iv: CustomUIImageView!
+    fileprivate var iv: YUIImageView!
     var idBadge: Int!
     var onClick: ((BadgesCollectionViewCell) -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
 
-        self.iv = CustomUIImageView(frame: .zero)
+        self.iv = YUIImageView(frame: .zero)
         self.iv.image = UIImage(named: "no-img")
         self.iv.contentMode = . scaleAspectFit
         self.iv.translatesAutoresizingMaskIntoConstraints = false

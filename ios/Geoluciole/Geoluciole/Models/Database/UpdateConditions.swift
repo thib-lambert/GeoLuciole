@@ -32,8 +32,8 @@ class UpdateConditions {
     var column: String!
     var value: Any!
 
-    init(onColumn: String, newValue: Any) {
+    init(onColumn: String, newValue: Any?) {
         self.column = onColumn
-        self.value = newValue
+        self.value = newValue ?? NSNull()
     }
 }

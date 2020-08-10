@@ -29,7 +29,7 @@ import Foundation
 
 class BadgesTable: Table {
 
-    fileprivate static var INSTANCE: BadgesTable!
+    static var shared = BadgesTable()
 
     static let ID = "id"
     static let TYPE = "type"
@@ -60,14 +60,6 @@ class BadgesTable: Table {
         ]
     }
 
-    static func getInstance() -> BadgesTable {
-        if INSTANCE == nil {
-            INSTANCE = BadgesTable()
-        }
-
-        return INSTANCE
-    }
-
     func insertBadges() {
 
         var badgesJSON = [Any]()
@@ -92,7 +84,7 @@ class BadgesTable: Table {
         }
 
         // Permet de savoir si on a déjà insérer les badges
-        BadgesTable.getInstance().selectQuery(completion: { (success, queryResult, error) in
+        BadgesTable.shared.selectQuery(completion: { (success, queryResult, error) in
             if error == nil {
                 badgesQueryResult = queryResult
             } else {
@@ -112,7 +104,7 @@ class BadgesTable: Table {
             for object in badgesJSON {
                 var badge = object as! [String: Any]
                 badge["is_obtain"] = false
-                BadgesTable.getInstance().insertQuery(badge)
+                BadgesTable.shared.insertQuery(badge)
             }
 
             if Constantes.DEBUG {

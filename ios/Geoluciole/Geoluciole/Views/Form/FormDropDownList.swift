@@ -31,11 +31,11 @@ import UIKit
 class FormDropDownList: UIStackView, UITableViewDelegate, UITableViewDataSource {
 
     fileprivate var data = [String]()
-    fileprivate var titre: CustomUILabel!
-    fileprivate var button: CustomUIButton!
+    fileprivate var titre: YUILabel!
+    fileprivate var button: YUIButton!
     fileprivate var tbView: UITableView!
     fileprivate var formTextfield: FormTextField!
-    fileprivate var iv: CustomUIImageView!
+    fileprivate var iv: YUIImageView!
     fileprivate var optionSelected: String = ""
     fileprivate var optionPrecision: String?
     fileprivate let reusableIdentifier = "OptionTableViewCell"
@@ -67,10 +67,10 @@ class FormDropDownList: UIStackView, UITableViewDelegate, UITableViewDataSource 
         self.data = data
         self.data.append(Tools.getTranslate(key: "form_other_option"))
 
-        self.titre = CustomUILabel()
+        self.titre = YUILabel()
         self.titre.text = title
         self.titre.numberOfLines = 0
-        self.titre.setStyle(style: .bodyRegular)
+        self.titre.style = .bodyRegular
         self.titre.translatesAutoresizingMaskIntoConstraints = false
         self.addArrangedSubview(self.titre)
 
@@ -81,7 +81,7 @@ class FormDropDownList: UIStackView, UITableViewDelegate, UITableViewDataSource 
         wrap.layer.cornerRadius = 2
         self.addArrangedSubview(wrap)
 
-        self.button = CustomUIButton()
+        self.button = YUIButton()
         self.button.setTitleColor(.black, for: .normal)
         self.button .setTitle(Tools.getTranslate(key: "form_prompt_whom"), for: .normal)
         self.button.translatesAutoresizingMaskIntoConstraints = false
@@ -99,7 +99,7 @@ class FormDropDownList: UIStackView, UITableViewDelegate, UITableViewDataSource 
         self.button.contentEdgeInsets = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         wrap.addSubview(self.button)
 
-        self.iv = CustomUIImageView(frame: .zero)
+        self.iv = YUIImageView(frame: .zero)
         self.iv.image = UIImage(named: "fleche-bas")
         self.iv.contentMode = .scaleAspectFit
         self.iv.translatesAutoresizingMaskIntoConstraints = false
@@ -142,7 +142,6 @@ class FormDropDownList: UIStackView, UITableViewDelegate, UITableViewDataSource 
         self.button.sizeToFit()
 
         NSLayoutConstraint.activate([
-
             self.button.topAnchor.constraint(equalTo: wrap.topAnchor),
             self.button.leftAnchor.constraint(equalTo: wrap.leftAnchor),
             self.button.bottomAnchor.constraint(equalTo: wrap.bottomAnchor),
@@ -175,7 +174,7 @@ class FormDropDownList: UIStackView, UITableViewDelegate, UITableViewDataSource 
 
     func hideTableView() {
         self.isOpen = false
-            self.iv.image = UIImage(named: "fleche-bas")
+        self.iv.image = UIImage(named: "fleche-bas")
         self.tbView.isHidden = true
         self.onResize?()
     }

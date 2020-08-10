@@ -29,7 +29,7 @@ import Foundation
 
 class LocationTable: Table {
 
-    fileprivate static var INSTANCE: LocationTable!
+    static var shared = LocationTable()
 
     static let LATITUDE = "latitude"
     static let LONGITUDE = "longitude"
@@ -52,14 +52,6 @@ class LocationTable: Table {
             TableColumn(columnName: LocationTable.VITESSE, columnType: "DOUBLE", canBeNull: false),
             TableColumn(columnName: LocationTable.DATE, columnType: "TEXT", canBeNull: false)
         ]
-    }
-    
-    static func getInstance() -> LocationTable {
-        if INSTANCE == nil {
-            INSTANCE = LocationTable()
-        }
-        
-        return INSTANCE
     }
 }
 

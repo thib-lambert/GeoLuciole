@@ -34,7 +34,7 @@ import UIKit
 }
 
 class FabricCustomButton: NSObject {
-    
+
     enum ButtonType {
         case nextPrev, next, prev, valid, refuseAccept
     }
@@ -58,8 +58,8 @@ class FabricCustomButton: NSObject {
 class ButtonsPrevNext: UIView {
 
     weak var delegate: ButtonsPrevNextDelegate?
-    fileprivate var buttonNext: CustomUIButton!
-    fileprivate var buttonPrevious: CustomUIButton!
+    fileprivate var buttonNext: YUIButton!
+    fileprivate var buttonPrevious: YUIButton!
 
     enum ButtonChoice {
         case next, previous
@@ -68,8 +68,8 @@ class ButtonsPrevNext: UIView {
     init() {
         super.init(frame: .zero)
 
-        self.buttonNext = CustomUIButton()
-        self.buttonNext.setStyle(style: .active)
+        self.buttonNext = YUIButton()
+        self.buttonNext.style = .active
         self.buttonNext.setTitle(Tools.getTranslate(key: "form_continue"), for: .normal)
         self.buttonNext.translatesAutoresizingMaskIntoConstraints = false
         self.buttonNext.onClick = { [weak self] boutton in
@@ -79,8 +79,8 @@ class ButtonsPrevNext: UIView {
         }
         self.addSubview(self.buttonNext)
 
-        self.buttonPrevious = CustomUIButton()
-        self.buttonPrevious.setStyle(style: .active)
+        self.buttonPrevious = YUIButton()
+        self.buttonPrevious.style = .active
         self.buttonPrevious.setTitle(Tools.getTranslate(key: "form_previous"), for: .normal)
         self.buttonPrevious.translatesAutoresizingMaskIntoConstraints = false
         self.buttonPrevious.onClick = { [weak self] boutton in
@@ -108,11 +108,11 @@ class ButtonsPrevNext: UIView {
         switch button {
 
         case .next:
-            self.buttonNext.setStyle(style: .disabled)
+            self.buttonNext.style = .disabled
             self.buttonNext.isUserInteractionEnabled = false
 
         case .previous:
-            self.buttonPrevious.setStyle(style: .disabled)
+            self.buttonPrevious.style = .disabled
             self.buttonPrevious.isUserInteractionEnabled = false
         }
     }
@@ -121,11 +121,11 @@ class ButtonsPrevNext: UIView {
         switch button {
 
         case .next:
-            self.buttonNext.setStyle(style: .active)
+            self.buttonNext.style = .active
             self.buttonNext.isUserInteractionEnabled = true
 
         case .previous:
-            self.buttonPrevious.setStyle(style: .active)
+            self.buttonPrevious.style = .active
             self.buttonPrevious.isUserInteractionEnabled = true
         }
     }
@@ -199,21 +199,21 @@ fileprivate class ButtonsRefuseAccept: ButtonsPrevNext {
 
     override init() {
         super.init()
-        
+
         self.buttonNext.setTitle(Tools.getTranslate(key: "action_accept"), for: .normal)
         self.buttonPrevious.setTitle(Tools.getTranslate(key: "action_refused"), for: .normal)
-        self.buttonPrevious.setStyle(style: .delete)
+        self.buttonPrevious.style = .delete
     }
 
     override func setEnabled(button: ButtonChoice) {
         switch button {
 
         case .next:
-            self.buttonNext.setStyle(style: .active)
+            self.buttonNext.style = .active
             self.buttonNext.isUserInteractionEnabled = true
 
         case .previous:
-            self.buttonPrevious.setStyle(style: .delete)
+            self.buttonPrevious.style = .delete
             self.buttonPrevious.isUserInteractionEnabled = true
         }
     }
