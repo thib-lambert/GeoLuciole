@@ -45,9 +45,9 @@ class StatsTrophiesViewController: ParentViewController, UICollectionViewDelegat
         self.statView.translatesAutoresizingMaskIntoConstraints = false
         self.rootView.addSubview(self.statView)
 
-        let label = CustomUILabel()
+        let label = YUILabel()
         label.text = Tools.getTranslate(key: "achievement_title")
-        label.setStyle(style: .subtitleBold)
+        label.style = .subtitleBold
         label.translatesAutoresizingMaskIntoConstraints = false
         self.rootView.addSubview(label)
 
@@ -120,7 +120,7 @@ class StatsTrophiesViewController: ParentViewController, UICollectionViewDelegat
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: self.reuseIdentifier, for: indexPath) as! BadgesCollectionViewCell
-        
+
         cell.backgroundColor = UIColor(red: 227 / 255, green: 227 / 255, blue: 227 / 255, alpha: 0.5)
         cell.setImage(name: self.badgesData[indexPath.row].resource)
         cell.layer.cornerRadius = 10

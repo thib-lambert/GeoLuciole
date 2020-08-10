@@ -46,9 +46,9 @@ class CGUViewController: ParentModalViewController, UIWebViewDelegate {
         self.titleBar.isHidden = true
 
         // Création d'un bouton "Femer"
-        let closeButton = CustomUIButton()
+        let closeButton = YUIButton()
         closeButton.setTitle(Tools.getTranslate(key: "action_close"), for: .normal)
-        closeButton.setStyle(style: .defaultStyle)
+        closeButton.style = .defaultStyle
         closeButton.onClick = { [weak self] _ in
             guard let strongSelf = self else { return }
 
@@ -102,12 +102,12 @@ class CGUViewController: ParentModalViewController, UIWebViewDelegate {
     func webViewDidFinishLoad(_ webView: UIWebView) {
         self.loader.stopAnimating()
     }
-    
+
     func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebView.NavigationType) -> Bool {
         self.loader.startAnimating()
         return true
     }
-    
+
     func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
         self.loader.stopAnimating()
     }

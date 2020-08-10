@@ -25,32 +25,29 @@
 //    (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 //    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import UIKit
 import Foundation
+import UIKit
 
-class CustomUILabel: UILabel {
-
-    func setStyle (style: LabelStyle) {
+/// Cette classe permet de gérer un clic sur une UIImageView
+class YUIImageView: UIImageView, UIGestureRecognizerDelegate {
+    
+    var onClick: ((YUIImageView) -> Void)?
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
         
-        switch style {
-        case .titleRegular:
-            self.font = UIFont(name: "Roboto-Regular", size: 24)
-        case .subtitleRegular:
-            self.font = UIFont(name: "Roboto-Regular", size: 20)
-        case .bodyRegular:
-            self.font = UIFont(name: "Roboto-Regular", size: 16)
-        case .titleItalic:
-            self.font = UIFont(name: "Roboto-Italic", size: 24)
-        case .subtitleItalic:
-            self.font = UIFont(name: "Roboto-Italic", size: 20)
-        case .bodyItalic:
-            self.font = UIFont(name: "Roboto-Italic", size: 16)
-        case .titleBold:
-            self.font = UIFont(name: "Roboto-Bold", size: 24)
-        case .subtitleBold:
-            self.font = UIFont(name: "Roboto-Bold", size: 20)
-        case .bodyBold:
-            self.font = UIFont(name: "Roboto-Bold", size: 16)
-        }
+        let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(YUIImageView.touchOnUIImageView))
+        tapRecognizer.numberOfTouchesRequired = 1
+        tapRecognizer.delegate = self
+        self.isUserInteractionEnabled = true
+        self.addGestureRecognizer(tapRecognizer)
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
+    @objc fileprivate func touchOnUIImageView() {
+        self.onClick?(self)
     }
 }

@@ -68,13 +68,13 @@ class FormThirdPageViewController: ParentModalViewController, ButtonsPrevNextDel
         super.viewDidLoad()
 
         let titre: FormTitlePage!
-        
-        if UserPrefs.getInstance().bool(forKey: UserPrefs.KEY_FORMULAIRE_CONSENT) {
+
+        if UserPrefs.shared.bool(forKey: .consentForm) {
             titre = FormTitlePage(title: Tools.getTranslate(key: "form_title"), pageIndex: "3/4")
         } else {
             titre = FormTitlePage(title: Tools.getTranslate(key: "form_title_anonym"), pageIndex: "2/3")
         }
-        
+
         titre.translatesAutoresizingMaskIntoConstraints = false
         self.rootView.addSubview(titre)
 
@@ -91,11 +91,11 @@ class FormThirdPageViewController: ParentModalViewController, ButtonsPrevNextDel
         let formulaire = self.createForm()
         formulaire.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(formulaire)
-        
-        let requiredFields = CustomUILabel()
+
+        let requiredFields = YUILabel()
         requiredFields.text = Tools.getTranslate(key: "form_required")
         requiredFields.translatesAutoresizingMaskIntoConstraints = false
-        requiredFields.setStyle(style: .bodyBold)
+        requiredFields.style = .bodyBold
         self.rootView.addSubview(requiredFields)
 
         let zoneButton = FabricCustomButton.createButton(type: .nextPrev)
@@ -112,7 +112,7 @@ class FormThirdPageViewController: ParentModalViewController, ButtonsPrevNextDel
             zoneButton.bottomAnchor.constraint(equalTo: self.rootView.bottomAnchor, constant: -Constantes.FIELD_SPACING_VERTICAL),
             zoneButton.leftAnchor.constraint(equalTo: self.rootView.leftAnchor, constant: Constantes.PAGE_PADDING),
             zoneButton.rightAnchor.constraint(equalTo: self.rootView.rightAnchor, constant: -Constantes.PAGE_PADDING),
-            
+
             requiredFields.bottomAnchor.constraint(equalTo: zoneButton.topAnchor, constant: -Constantes.FIELD_SPACING_VERTICAL),
             requiredFields.leftAnchor.constraint(equalTo: self.rootView.leftAnchor, constant: Constantes.PAGE_PADDING),
             requiredFields.rightAnchor.constraint(equalTo: self.rootView.rightAnchor, constant: -Constantes.PAGE_PADDING),
@@ -139,7 +139,7 @@ class FormThirdPageViewController: ParentModalViewController, ButtonsPrevNextDel
             formulaire.bottomAnchor.constraint(equalTo: self.contentView.bottomAnchor)
         ])
     }
-    
+
     func getFormDat() -> [[String: Any]] {
         self.formData.append(["3": self.dropDown0.selectedValue])
         self.formData.append(["4": self.question1.selectedValue])
@@ -182,9 +182,9 @@ class FormThirdPageViewController: ParentModalViewController, ButtonsPrevNextDel
         self.dropDown0.translatesAutoresizingMaskIntoConstraints = false
         self.dropDown0.onResize = { [weak self] in
             guard let strongSelf = self else { return }
-            
+
             strongSelf.scrollView.layoutIfNeeded()
-            
+
             strongSelf.scrollView.contentSize = CGSize(width: strongSelf.contentView.bounds.width, height: strongSelf.contentView.bounds.height + Constantes.FIELD_SPACING_VERTICAL)
         }
         self.allFields.append(self.dropDown0!)
@@ -225,9 +225,9 @@ class FormThirdPageViewController: ParentModalViewController, ButtonsPrevNextDel
         self.dropDown1.translatesAutoresizingMaskIntoConstraints = false
         self.dropDown1.onResize = { [weak self] in
             guard let strongSelf = self else { return }
-            
+
             strongSelf.scrollView.layoutIfNeeded()
-            
+
             strongSelf.scrollView.contentSize = CGSize(width: strongSelf.contentView.bounds.width, height: strongSelf.contentView.bounds.height + Constantes.FIELD_SPACING_VERTICAL)
         }
         self.allFields.append(self.dropDown1!)

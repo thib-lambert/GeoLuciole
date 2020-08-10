@@ -47,9 +47,9 @@ class PartnersViewController: ParentModalViewController {
         self.contentView.translatesAutoresizingMaskIntoConstraints = false
         self.scrollView.addSubview(self.contentView)
 
-        let closeButton = CustomUIButton()
+        let closeButton = YUIButton()
         closeButton.setTitle(Tools.getTranslate(key: "action_close"), for: .normal)
-        closeButton.setStyle(style: .defaultStyle)
+        closeButton.style = .defaultStyle
         closeButton.onClick = { [weak self] _ in
             guard let strongSelf = self else { return }
 
@@ -58,10 +58,10 @@ class PartnersViewController: ParentModalViewController {
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         self.rootView.addSubview(closeButton)
 
-        let text = CustomUILabel()
+        let text = YUILabel()
         let rgpdContent = Tools.getTranslate(key: "rgpd_first_content_1_line") + "\n\n" + Tools.getTranslate(key: "rgpd_first_content_2_line") + "\n\n" + Tools.getTranslate(key: "rgpd_first_content_3_line") + "\n\n" + Tools.getTranslate(key: "rgpd_first_content_4_line")
         text.text = rgpdContent
-        text.setStyle(style: .bodyRegular)
+        text.style = .bodyRegular
         text.translatesAutoresizingMaskIntoConstraints = false
         text.textAlignment = .justified
         text.numberOfLines = 0
@@ -70,17 +70,17 @@ class PartnersViewController: ParentModalViewController {
         let partnersZone = UIView()
         partnersZone.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(partnersZone)
-        
+
         let logoULR = self.createUIImageView(imageName: "logo_ulr")
         let logoCNRS = self.createUIImageView(imageName: "logo_cnrs")
         let logoLIENSs = self.createUIImageView(imageName: "logo_lienss")
         let logoL3i = self.createUIImageView(imageName: "logo_l3i")
-        
+
         self.contentView.addSubview(logoULR)
         self.contentView.addSubview(logoCNRS)
         self.contentView.addSubview(logoLIENSs)
         self.contentView.addSubview(logoL3i)
-        
+
         let separator = UIView()
         separator.backgroundColor = .black
         separator.translatesAutoresizingMaskIntoConstraints = false
@@ -111,7 +111,7 @@ class PartnersViewController: ParentModalViewController {
             text.leftAnchor.constraint(equalTo: self.contentView.leftAnchor, constant: Constantes.PAGE_PADDING),
             text.rightAnchor.constraint(equalTo: self.contentView.rightAnchor, constant: -Constantes.PAGE_PADDING),
             text.topAnchor.constraint(equalTo: self.contentView.topAnchor, constant: Constantes.FIELD_SPACING_VERTICAL),
-            
+
             separator.heightAnchor.constraint(equalToConstant: 1),
             separator.widthAnchor.constraint(equalTo: self.contentView.widthAnchor, multiplier: 0.5),
             separator.centerXAnchor.constraint(equalTo: self.contentView.centerXAnchor),
@@ -129,17 +129,17 @@ class PartnersViewController: ParentModalViewController {
             logoULR.topAnchor.constraint(equalTo: partnersZone.topAnchor),
             logoULR.widthAnchor.constraint(equalTo: partnersZone.widthAnchor, multiplier: 0.45),
             logoULR.heightAnchor.constraint(equalTo: logoULR.widthAnchor),
-            
+
             logoCNRS.rightAnchor.constraint(equalTo: partnersZone.rightAnchor),
             logoCNRS.topAnchor.constraint(equalTo: partnersZone.topAnchor),
             logoCNRS.widthAnchor.constraint(equalTo: partnersZone.widthAnchor, multiplier: 0.45),
             logoCNRS.heightAnchor.constraint(equalTo: logoCNRS.widthAnchor),
-            
+
             logoLIENSs.leftAnchor.constraint(equalTo: partnersZone.leftAnchor),
             logoLIENSs.topAnchor.constraint(equalTo: logoULR.bottomAnchor, constant: Constantes.FIELD_SPACING_VERTICAL),
             logoLIENSs.widthAnchor.constraint(equalTo: partnersZone.widthAnchor, multiplier: 0.45),
             logoLIENSs.heightAnchor.constraint(equalTo: logoLIENSs.widthAnchor),
-            
+
             logoL3i.rightAnchor.constraint(equalTo: partnersZone.rightAnchor),
             logoL3i.topAnchor.constraint(equalTo: logoCNRS.bottomAnchor, constant: Constantes.FIELD_SPACING_VERTICAL),
             logoL3i.widthAnchor.constraint(equalTo: partnersZone.widthAnchor, multiplier: 0.45),
@@ -154,8 +154,8 @@ class PartnersViewController: ParentModalViewController {
         scrollView.contentSize = CGSize(width: contentView.bounds.width, height: contentView.bounds.height + Constantes.FIELD_SPACING_VERTICAL)
     }
 
-    fileprivate func createUIImageView(imageName: String) -> CustomUIImageView {
-        let view = CustomUIImageView(frame: .zero)
+    fileprivate func createUIImageView(imageName: String) -> YUIImageView {
+        let view = YUIImageView(frame: .zero)
         view.image = UIImage(named: imageName)
         view.contentMode = .scaleAspectFit
         view.translatesAutoresizingMaskIntoConstraints = false

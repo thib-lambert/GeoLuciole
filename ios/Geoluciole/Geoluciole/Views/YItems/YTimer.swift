@@ -28,18 +28,18 @@
 import Foundation
 import UIKit
 
-class CustomTimer {
+class YTimer {
 
-    fileprivate static var INSTANCE: CustomTimer!
+    fileprivate static var INSTANCE: YTimer!
     fileprivate var timer: Timer?
 
     fileprivate init() {
 
     }
 
-    static func getInstance() -> CustomTimer {
+    static func getInstance() -> YTimer {
         if INSTANCE == nil {
-            INSTANCE = CustomTimer()
+            INSTANCE = YTimer()
         }
 
         return INSTANCE

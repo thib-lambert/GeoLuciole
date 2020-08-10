@@ -36,13 +36,13 @@ class HomeViewController: ParentViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let dhDeb = UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_START_ENGAGEMENT)
-        let dhFin = UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_END_ENGAGEMENT)
+        let dhDeb = UserPrefs.shared.string(forKey: .startDateEngagement)
+        let dhFin = UserPrefs.shared.string(forKey: .endDateEngagement)
         if dhDeb == "" || dhFin == "" {
             let currentDate = Date()
             let dateEnd = Calendar.current.date(byAdding: .day, value: 1, to: currentDate)
-            UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_DATE_START_ENGAGEMENT, value: Tools.convertDate(date: currentDate))
-            UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_DATE_END_ENGAGEMENT, value: Tools.convertDate(date: dateEnd!))
+            UserPrefs.shared.setPrefs(key: .startDateEngagement, value: Tools.convertDate(currentDate))
+            UserPrefs.shared.setPrefs(key: .endDateEngagement, value: Tools.convertDate(dateEnd!))
         }
 
         // LevelView
@@ -95,31 +95,31 @@ class HomeViewController: ParentViewController {
 
     func calcProgress() {
         let date = Date()
-        let stringDate = Tools.convertDate(date: date)
-        let currentDate = Tools.convertDateGMT01(date: stringDate)
+        let stringDate = Tools.convertDate(date)
+        let currentDate = Tools.convertDateGMT01(stringDate)
 
-        let dateDebut = Tools.convertDateGMT01(date: UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_START_ENGAGEMENT))
-        let dateFin = Tools.convertDateGMT01(date: UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_END_ENGAGEMENT))
+        let dateDebut = Tools.convertDateGMT01(UserPrefs.shared.string(forKey: .startDateEngagement))
+        let dateFin = Tools.convertDateGMT01(UserPrefs.shared.string(forKey: .endDateEngagement))
 
         let pct: Float = Float((100 * currentDate.timeIntervalSince(dateDebut) / (dateFin.timeIntervalSince(dateDebut))) / 100)
         if Constantes.DEBUG {
             print("ProgressBar : \(pct)")
         }
-        self.showLevelView.setProgress(value: pct)
+        self.showLevelView.progress = pct
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
         // On cache le switch si le consentement du GPS a été refusé
-        self.collectDataSwitchView.isHidden = !self.userPrefs.bool(forKey: UserPrefs.KEY_RGPD_CONSENT)
+        self.collectDataSwitchView.isHidden = !UserPrefs.shared.bool(forKey: .rgpdConsent)
 
-        let send = self.userPrefs.bool(forKey: UserPrefs.KEY_SEND_DATA)
+        let send = UserPrefs.shared.bool(forKey: .sendData)
         self.collectDataSwitchView.setSwitch(value: send)
         self.calcProgress()
 
-        if let _ = self.userPrefs.object(forKey: UserPrefs.KEY_LAST_BADGE) {
-            self.lastTrophyView.setImage(nom: self.userPrefs.string(forKey: UserPrefs.KEY_LAST_BADGE))
+        if let _ = UserPrefs.shared.object(forKey: .lastBadgeObtained) {
+            self.lastTrophyView.setImage(nom: UserPrefs.shared.string(forKey: .lastBadgeObtained))
         } else {
             self.lastTrophyView.setImage(nom: "no-badge")
         }

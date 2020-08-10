@@ -33,7 +33,6 @@ class ParentViewController: UIViewController {
 
     var titleBar: TitleBarView!
     var rootView: UIView!
-    var userPrefs = UserPrefs.getInstance()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -63,7 +62,7 @@ class ParentViewController: UIViewController {
         if #available(iOS 11.0, *) {
             NSLayoutConstraint.activate([
                 subStatusBarView.topAnchor.constraint(equalTo: self.view.topAnchor),
-                subStatusBarView.heightAnchor.constraint(equalToConstant: Tools.getStatusBarHeight()),
+                subStatusBarView.heightAnchor.constraint(equalToConstant: Tools.statusBarHeight),
                 subStatusBarView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
                 subStatusBarView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
 
@@ -73,7 +72,7 @@ class ParentViewController: UIViewController {
                 self.rootView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
 
                 self.titleBar.widthAnchor.constraint(equalTo: self.rootView.widthAnchor),
-                self.titleBar.heightAnchor.constraint(equalToConstant: Tools.getStatusBarHeight() + 5),
+                self.titleBar.heightAnchor.constraint(equalToConstant: Tools.statusBarHeight + 5),
                 self.titleBar.topAnchor.constraint(equalTo: self.rootView.topAnchor),
                 self.titleBar.leftAnchor.constraint(equalTo: self.rootView.leftAnchor),
                 self.titleBar.rightAnchor.constraint(equalTo: self.rootView.rightAnchor)
@@ -81,7 +80,7 @@ class ParentViewController: UIViewController {
         } else {
             NSLayoutConstraint.activate([
                 subStatusBarView.topAnchor.constraint(equalTo: self.view.topAnchor),
-                subStatusBarView.heightAnchor.constraint(equalToConstant: Tools.getStatusBarHeight()),
+                subStatusBarView.heightAnchor.constraint(equalToConstant: Tools.statusBarHeight),
                 subStatusBarView.leftAnchor.constraint(equalTo: self.view.leftAnchor),
                 subStatusBarView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
 
@@ -92,7 +91,7 @@ class ParentViewController: UIViewController {
                 self.rootView.rightAnchor.constraint(equalTo: self.view.rightAnchor),
 
                 self.titleBar.widthAnchor.constraint(equalTo: self.rootView.widthAnchor),
-                self.titleBar.heightAnchor.constraint(equalToConstant: Tools.getStatusBarHeight() + 5),
+                self.titleBar.heightAnchor.constraint(equalToConstant: Tools.statusBarHeight + 5),
                 self.titleBar.topAnchor.constraint(equalTo: self.rootView.topAnchor),
                 self.titleBar.leftAnchor.constraint(equalTo: self.rootView.leftAnchor),
                 self.titleBar.rightAnchor.constraint(equalTo: self.rootView.rightAnchor)

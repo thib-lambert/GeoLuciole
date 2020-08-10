@@ -33,8 +33,8 @@ class SettingsViewController: ParentViewController {
 
     fileprivate var scrollView: UIScrollView!
     fileprivate var contentView: UIView!
-    fileprivate var deleteButton: CustomUIButton!
-    fileprivate var sendDataManually: CustomUIButton!
+    fileprivate var deleteButton: YUIButton!
+    fileprivate var sendDataManually: YUIButton!
     fileprivate var durationOfEngagementFormView: DurationOfEngagementFormView!
 
     override func viewDidLoad() {
@@ -76,33 +76,33 @@ class SettingsViewController: ParentViewController {
         wrapButtons.translatesAutoresizingMaskIntoConstraints = false
         self.contentView.addSubview(wrapButtons)
 
-        let cguButton = CustomUIButton()
+        let cguButton = YUIButton()
         cguButton.setTitle(Tools.getTranslate(key: "licence_agreement"), for: .normal)
         cguButton.onClick = { button in
             let cguController = CGUViewController()
             cguController.modalPresentationStyle = .fullScreen
             self.present(cguController, animated: true, completion: nil)
         }
-        cguButton.setStyle(style: .settingLight)
+        cguButton.style = .settingLight
         cguButton.translatesAutoresizingMaskIntoConstraints = false
         wrapButtons.addSubview(cguButton)
 
-        let partnersButton = CustomUIButton()
+        let partnersButton = YUIButton()
         partnersButton.setTitle(Tools.getTranslate(key: "partners"), for: .normal)
         partnersButton.onClick = { button in
             let partners = PartnersViewController()
             partners.modalPresentationStyle = .fullScreen
             self.present(partners, animated: true, completion: nil)
         }
-        partnersButton.setStyle(style: .settingLight)
+        partnersButton.style = .settingLight
         partnersButton.translatesAutoresizingMaskIntoConstraints = false
         wrapButtons.addSubview(partnersButton)
 
-        self.deleteButton = CustomUIButton()
+        self.deleteButton = YUIButton()
         self.deleteButton.translatesAutoresizingMaskIntoConstraints = false
         wrapButtons.addSubview(self.deleteButton)
 
-        self.sendDataManually = CustomUIButton()
+        self.sendDataManually = YUIButton()
         self.sendDataManually.setTitle(Tools.getTranslate(key: "send_data"), for: .normal)
         self.sendDataManually.onClick = { [weak self] _ in
             guard let strongSelf = self else { return }
@@ -110,11 +110,11 @@ class SettingsViewController: ParentViewController {
             let queue = DispatchQueue(label: "SendData", qos: .background)
 
             queue.async {
-                CustomTimer.getInstance().sendPostLocationElasticSearch(viewController: strongSelf)
+                YTimer.getInstance().sendPostLocationElasticSearch(viewController: strongSelf)
             }
 
         }
-        self.sendDataManually.setStyle(style: .settingDark)
+        self.sendDataManually.style = .settingDark
         self.sendDataManually.translatesAutoresizingMaskIntoConstraints = false
         wrapButtons.addSubview(self.sendDataManually)
 
@@ -188,16 +188,16 @@ class SettingsViewController: ParentViewController {
     override func viewWillAppear(_ animated: Bool) {
 
         super.viewWillAppear(animated)
-        if UserPrefs.getInstance().bool(forKey: UserPrefs.KEY_RGPD_CONSENT) {
+        if UserPrefs.shared.bool(forKey: .rgpdConsent) {
             self.deleteButton.setTitle(Tools.getTranslate(key: "revoke_consent"), for: .normal)
-            self.deleteButton.setStyle(style: .settingLight)
+            self.deleteButton.style = .settingLight
             self.deleteButton.onClick = { button in
                 self.openRevokConsent()
             }
             self.sendDataManually.isHidden = false
         } else {
             self.deleteButton.setTitle(Tools.getTranslate(key: "give_consent"), for: .normal)
-            self.deleteButton.setStyle(style: .settingDark)
+            self.deleteButton.style = .settingDark
             self.deleteButton.onClick = { button in
                 let rgpdController = GPSConsentRGPDViewController()
                 rgpdController.modalPresentationStyle = .fullScreen
@@ -207,8 +207,8 @@ class SettingsViewController: ParentViewController {
         }
 
         // maj date picker et label
-        let dateDebutStr = UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_START_ENGAGEMENT, defaultValue: UserPrefs.KEY_DATE_START_STAY)
-        let dateFinStr = UserPrefs.getInstance().string(forKey: UserPrefs.KEY_DATE_END_ENGAGEMENT, defaultValue: UserPrefs.KEY_DATE_END_STAY)
+        let dateDebutStr = UserPrefs.shared.string(forKey: .startDateEngagement, defaultValue: UserPrefs.UPKeys.startDayOfStay.rawValue)
+        let dateFinStr = UserPrefs.shared.string(forKey: .endDateEngagement, defaultValue: UserPrefs.UPKeys.endDayOfStay.rawValue)
 
         self.durationOfEngagementFormView.getDateStartField().setDefaultDatePicker(date: dateDebutStr)
         self.durationOfEngagementFormView.getDateStartField().setDateLabel(date: dateDebutStr)
@@ -236,14 +236,14 @@ class SettingsViewController: ParentViewController {
     }
 
     func saveToClipBoard(action: UIAlertAction) {
-        UIPasteboard.general.string = userPrefs.string(forKey: UserPrefs.KEY_IDENTIFIER)
+        UIPasteboard.general.string = UserPrefs.shared.string(forKey: .identifier)
         self.rootView.makeToast(Tools.getTranslate(key: "toast_copy_id"), duration: 2, position: .bottom)
     }
 
     func openMailApp(action: UIAlertAction) {
         let email = Constantes.REVOQ_CONSENT_MAIL
 
-        let identifiant = userPrefs.string(forKey: UserPrefs.KEY_IDENTIFIER)
+        let identifiant = UserPrefs.shared.string(forKey: .identifier)
         let stringURL = "mailto:\(email)?subject=Revoquer%20mon%20consentement&body=\(identifiant)%20demande%20la%20suppression%20de%20ses%20donn%C3%A9es"
         if let url = URL(string: stringURL) {
 

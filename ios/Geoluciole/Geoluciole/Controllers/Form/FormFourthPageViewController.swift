@@ -32,7 +32,7 @@ class FormFourthPageViewController: ParentModalViewController, ButtonsPrevNextDe
 
     var prevPage: (() -> Void)?
     var onValidate: (() -> Void)?
-    fileprivate var lbTextExp: CustomUILabel!
+    fileprivate var lbTextExp: YUILabel!
     fileprivate var debutCollect: FormDateFieldView!
     fileprivate var finCollect: FormDateFieldView!
     fileprivate var scrollView: UIScrollView!
@@ -42,13 +42,13 @@ class FormFourthPageViewController: ParentModalViewController, ButtonsPrevNextDe
         super.viewDidLoad()
 
         //récuperation des dates enregistrées dans la page arrivée/départ (2/4)
-        let startCollect = Tools.convertDate(date: self.userPrefs.string(forKey: UserPrefs.KEY_DATE_START_STAY))
-        let endCollect = Tools.convertDate(date: self.userPrefs.string(forKey: UserPrefs.KEY_DATE_END_STAY))
+        let startCollect = Tools.convertDate(UserPrefs.shared.string(forKey: .startDayOfStay))
+        let endCollect = Tools.convertDate(UserPrefs.shared.string(forKey: .endDayOfStay))
 
         var titre: FormTitlePage
-        
+
         //si la page une n'est pas affichée alors cette page est la 3/3 et le titre doit changer
-        if UserPrefs.getInstance().bool(forKey: UserPrefs.KEY_FORMULAIRE_CONSENT) {
+        if UserPrefs.shared.bool(forKey: .consentForm) {
             titre = FormTitlePage(title: Tools.getTranslate(key: "form_title"), pageIndex: "4/4")
         } else {
             titre = FormTitlePage(title: Tools.getTranslate(key: "form_title_anonym"), pageIndex: "3/3")
@@ -68,8 +68,8 @@ class FormFourthPageViewController: ParentModalViewController, ButtonsPrevNextDe
         self.scrollView.addSubview(self.contentView)
 
         //création du texte explicatif
-        self.lbTextExp = CustomUILabel()
-        self.lbTextExp.setStyle(style: .bodyRegular)
+        self.lbTextExp = YUILabel()
+        self.lbTextExp.style = .bodyRegular
         self.lbTextExp.text = Tools.getTranslate(key: "form_explain_validation_period_part_1") + "\n" + Tools.getTranslate(key: "form_explain_validation_period_part_2")
         self.lbTextExp.numberOfLines = 0
         self.lbTextExp.translatesAutoresizingMaskIntoConstraints = false
@@ -80,28 +80,28 @@ class FormFourthPageViewController: ParentModalViewController, ButtonsPrevNextDe
         self.debutCollect.translatesAutoresizingMaskIntoConstraints = false
         self.debutCollect.setMinimumDate(date: startCollect)
         self.debutCollect.setMaximumDate(date: endCollect)
-        self.debutCollect.setDefaultDate(key: UserPrefs.KEY_DATE_START_STAY)
-        self.debutCollect.validationData = {[weak self] textfield in
+        self.debutCollect.setDefaultDate(key: .startDayOfStay)
+        self.debutCollect.validationData = { [weak self] textfield in
             guard let strongSelf = self else {
                 return false
             }
             var incomeDate: Date
 
             if let date = textfield.text, date != "" {
-                incomeDate = Tools.convertDate(date: date)
+                incomeDate = Tools.convertDate(date)
             } else if let placeholder = textfield.placeholder, placeholder != "" {
-                incomeDate = Tools.convertDate(date: placeholder)
+                incomeDate = Tools.convertDate(placeholder)
             } else {
                 incomeDate = Date()
             }
-            
+
             let result = incomeDate.timeIntervalSince1970 <= strongSelf.finCollect.date.timeIntervalSince1970
             if result {
-                UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_DATE_START_ENGAGEMENT, value: Tools.convertDate(date: incomeDate))
+                UserPrefs.shared.setPrefs(key: .startDateEngagement, value: Tools.convertDate(incomeDate))
 
             }
             return result
-            
+
         }
         self.contentView.addSubview(self.debutCollect)
 
@@ -110,28 +110,28 @@ class FormFourthPageViewController: ParentModalViewController, ButtonsPrevNextDe
         self.finCollect.translatesAutoresizingMaskIntoConstraints = false
         self.finCollect.setMinimumDate(date: startCollect)
         self.finCollect.setMaximumDate(date: endCollect)
-        self.finCollect.setDefaultDate(key: UserPrefs.KEY_DATE_END_STAY)
-        self.finCollect.validationData = {[weak self] textfield in
+        self.finCollect.setDefaultDate(key: .endDayOfStay)
+        self.finCollect.validationData = { [weak self] textfield in
             guard let strongSelf = self else {
                 return false
             }
             var incomeDate: Date
 
             if let date = textfield.text, date != "" {
-                incomeDate = Tools.convertDate(date: date)
+                incomeDate = Tools.convertDate(date)
             } else if let placeholder = textfield.placeholder, placeholder != "" {
-                incomeDate = Tools.convertDate(date: placeholder)
+                incomeDate = Tools.convertDate(placeholder)
             } else {
                 incomeDate = Date()
             }
-            
+
             let result = incomeDate.timeIntervalSince1970 >= strongSelf.debutCollect.date.timeIntervalSince1970
             if result {
-                UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_DATE_END_ENGAGEMENT, value: Tools.convertDate(date: incomeDate))
+                UserPrefs.shared.setPrefs(key: .endDateEngagement, value: Tools.convertDate(incomeDate))
 
             }
             return result
-            
+
         }
         self.contentView.addSubview(self.finCollect)
 

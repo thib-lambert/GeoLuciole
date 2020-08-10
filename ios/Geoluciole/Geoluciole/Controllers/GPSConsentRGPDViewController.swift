@@ -36,9 +36,9 @@ class GPSConsentRGPDViewController: ParentModalViewController, ButtonsPrevNextDe
     fileprivate var firstSeparator: UIView!
     fileprivate var secondSeparator: UIView!
 
-    fileprivate var titreRGPD: CustomUILabel!
-    fileprivate var subtitleRGPD: CustomUILabel!
-    fileprivate var textRGPD: CustomUILabel!
+    fileprivate var titreRGPD: YUILabel!
+    fileprivate var subtitleRGPD: YUILabel!
+    fileprivate var textRGPD: YUILabel!
     fileprivate var checkbox: CheckBoxFieldView!
     fileprivate var buttons: ButtonsPrevNext!
 
@@ -64,29 +64,29 @@ class GPSConsentRGPDViewController: ParentModalViewController, ButtonsPrevNextDe
         self.scrollView.addSubview(self.contentView)
 
         // texte rgpd
-        self.textRGPD = CustomUILabel()
+        self.textRGPD = YUILabel()
         self.textRGPD.numberOfLines = 0
 
         let rgpd_content = Tools.getTranslate(key: "rgpd_first_content_1_line") + "\n\n" + Tools.getTranslate(key: "rgpd_first_content_2_line") + "\n\n" + Tools.getTranslate(key: "rgpd_first_content_3_line") + "\n\n" + Tools.getTranslate(key: "rgpd_first_content_4_line")
         self.textRGPD.text = rgpd_content
         self.textRGPD.translatesAutoresizingMaskIntoConstraints = false
-        self.textRGPD.setStyle(style: .bodyRegular)
+        self.textRGPD.style = .bodyRegular
         self.textRGPD.textAlignment = .justified
         self.contentView.addSubview(self.textRGPD)
 
         // Checkbox
         self.checkbox = CheckBoxFieldView()
-        self.checkbox.setStyle(style: .tick)
-        self.checkbox.setBorderStyle(style: .square)
-        self.checkbox.setCheckmarkColor(color: .orange)
-        self.checkbox.setCheckedBorderColor(color: .orange)
-        self.checkbox.setUncheckedBorderColor(color: .orange)
-        self.checkbox.setTitleOption(titleOption: Tools.getTranslate(key: "rgpd_first_content_consentement"))
+        self.checkbox.style = .tick
+        self.checkbox.borderStyle = .square
+        self.checkbox.checkmarkColor = .orange
+        self.checkbox.checkedBorderColor = .orange
+        self.checkbox.uncheckedBorderColor = .orange
+        self.checkbox.titleOption = Tools.getTranslate(key: "rgpd_first_content_consentement")
         self.checkbox.translatesAutoresizingMaskIntoConstraints = false
         self.checkbox.onCheckChange = { [weak self] checkboxView in
             guard let strongSelf = self else { return }
 
-            if strongSelf.checkbox.isChecked() {
+            if strongSelf.checkbox.checked {
                 strongSelf.buttons.setDisabled(button: .previous)
                 strongSelf.buttons.setEnabled(button: .next)
             } else {
@@ -125,22 +125,22 @@ class GPSConsentRGPDViewController: ParentModalViewController, ButtonsPrevNextDe
 
     fileprivate func setupTitleAndSubtitle() {
         // titre
-        self.titreRGPD = CustomUILabel()
+        self.titreRGPD = YUILabel()
         self.titreRGPD.text = Tools.getTranslate(key: "rgpd_title_primary")
         self.titreRGPD.textColor = .orange
         self.titreRGPD.textAlignment = .center
         self.titreRGPD.translatesAutoresizingMaskIntoConstraints = false
-        self.titreRGPD.setStyle(style: .titleBold)
+        self.titreRGPD.style = .titleBold
         self.rootView.addSubview(self.titreRGPD)
 
         // sous titre
-        self.subtitleRGPD = CustomUILabel()
+        self.subtitleRGPD = YUILabel()
         self.subtitleRGPD.textAlignment = .center
         self.subtitleRGPD.numberOfLines = 0
         self.subtitleRGPD.translatesAutoresizingMaskIntoConstraints = false
         self.subtitleRGPD.text = Tools.getTranslate(key: "rgpd_title_project")
         self.subtitleRGPD.textColor = .backgroundDefault
-        self.subtitleRGPD.setStyle(style: .subtitleBold)
+        self.subtitleRGPD.style = .subtitleBold
         self.rootView.addSubview(self.subtitleRGPD)
     }
 
@@ -213,21 +213,21 @@ class GPSConsentRGPDViewController: ParentModalViewController, ButtonsPrevNextDe
     }
 
     func boutonsPrevNext(boutonsPrevNext: ButtonsPrevNext, onNext: Bool) {
-        self.userPrefs.setPrefs(key: UserPrefs.KEY_RGPD_CONSENT, value: true)
-        self.userPrefs.setPrefs(key: UserPrefs.KEY_SEND_DATA, value: true)
+        UserPrefs.shared.setPrefs(key: .rgpdConsent, value: true)
+        UserPrefs.shared.setPrefs(key: .sendData, value: true)
 
         // on sauvegarde les données de consentement dans les usersPref temporairement (le temps de faire le formulaire)
         self.saveConsentementGPS()
-        LocationHandler.getInstance().requestLocationAuthorization()
+        LocationHandler.shared.requestLocationAuthorization()
         self.dismiss(animated: true)
     }
 
     func boutonsPrevNext(boutonsPrevNext: ButtonsPrevNext, onPrevious: Bool) {
-        self.userPrefs.setPrefs(key: UserPrefs.KEY_RGPD_CONSENT, value: false)
+        UserPrefs.shared.setPrefs(key: .rgpdConsent, value: false)
 
         // On supprime les données de consentement GPS si elles existent lors d'un refus d'utilisation des données de localisation
-        if self.userPrefs.object(forKey: UserPrefs.KEY_GPS_CONSENT_DATA) != nil {
-            self.userPrefs.removePrefs(key: UserPrefs.KEY_GPS_CONSENT_DATA)
+        if UserPrefs.shared.object(forKey: .dataGPSConsent) != nil {
+            UserPrefs.shared.removePrefs(key: .dataGPSConsent)
         }
         self.dismiss(animated: true)
     }
@@ -235,9 +235,9 @@ class GPSConsentRGPDViewController: ParentModalViewController, ButtonsPrevNextDe
     /// Sauvegarde les données de consentement de l'utilisation du GPS en local sur le smartphone.
     fileprivate func saveConsentementGPS() {
         let now = Date()
-        let dict = ["consentement_gps": Tools.getTranslate(key: "rgpd_first_content_consentement"), "date_gps": now.timeIntervalSince1970, "date_gps_str": Tools.convertDateToServerDate(date: now)] as [String: Any]
+        let dict = ["consentement_gps": Tools.getTranslate(key: "rgpd_first_content_consentement"), "date_gps": now.timeIntervalSince1970, "date_gps_str": Tools.convertDateToServerDate(now)] as [String: Any]
 
-        UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_GPS_CONSENT_DATA, value: dict)
+        UserPrefs.shared.setPrefs(key: .dataGPSConsent, value: dict)
     }
 }
 

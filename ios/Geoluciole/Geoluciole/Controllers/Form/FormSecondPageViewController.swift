@@ -42,7 +42,7 @@ class FormSecondPageViewController: ParentModalViewController, ButtonsPrevNextDe
         var boutonsNav: ButtonsPrevNext
         let titre: FormTitlePage!
         
-        if UserPrefs.getInstance().bool(forKey: UserPrefs.KEY_FORMULAIRE_CONSENT) {
+        if UserPrefs.shared.bool(forKey: .consentForm) {
             titre = FormTitlePage(title: Tools.getTranslate(key: "form_title"), pageIndex: "2/4")
             boutonsNav = FabricCustomButton.createButton(type: .nextPrev)
         } else {

@@ -48,7 +48,7 @@ class FormPageViewController: UIPageViewController, UIPageViewControllerDelegate
         self.thirdPage = FormThirdPageViewController()
         self.fourthPage = FormFourthPageViewController()
 
-        if UserPrefs.getInstance().bool(forKey: UserPrefs.KEY_FORMULAIRE_CONSENT) {
+        if UserPrefs.shared.bool(forKey: .consentForm) {
             self.displayablePages.append(self.firstPage)
         } else {
             self.displayablePages.append(self.secondPage)
@@ -134,7 +134,7 @@ class FormPageViewController: UIPageViewController, UIPageViewControllerDelegate
             [weak self] in
             guard let strongSelf = self else { return }
             if strongSelf.fourthPage.validationPage() {
-                UserPrefs.getInstance().setPrefs(key: UserPrefs.KEY_FORMULAIRE_REMPLI, value: true)
+                UserPrefs.shared.setPrefs(key: .completedForm, value: true)
                 // Envoi des informations de compte au serveur
                 strongSelf.sendDataCompte()
                 
@@ -171,8 +171,8 @@ class FormPageViewController: UIPageViewController, UIPageViewControllerDelegate
     /// Envoi des informations de compte au serveur
     fileprivate func sendDataCompte() {
         // on récupère les données que l'on a stockées en local pour compléter le message à envoyer
-        if let gps_consent_data = UserPrefs.getInstance().object(forKey: UserPrefs.KEY_GPS_CONSENT_DATA) as? [String: Any] {
-            if let form_consent_data = UserPrefs.getInstance().object(forKey: UserPrefs.KEY_FORMULAIRE_CONSENT_DATA) as? [String: Any] {
+        if let gps_consent_data = UserPrefs.shared.object(forKey: .dataGPSConsent) as? [String: Any] {
+            if let form_consent_data = UserPrefs.shared.object(forKey: .dataFormConsent) as? [String: Any] {
                 // On complete notre objet avec les informations récupérées
                 
                 // informations consentement GPS
@@ -191,13 +191,13 @@ class FormPageViewController: UIPageViewController, UIPageViewControllerDelegate
             print("Aucune données de consentement GPS récupérée")
         }
         
-        let messageCompte = ElasticSearchAPI.getInstance().generateMessage(content: [self.formInfoGen], needBulk: false, addInfoDevice: true)
-        ElasticSearchAPI.getInstance().postCompte(message: messageCompte)
+        let messageCompte = ElasticSearchAPI.shared.generateMessage(content: [self.formInfoGen], needBulk: false, addInfoDevice: true)
+        ElasticSearchAPI.shared.postCompte(message: messageCompte)
     }
     
     /// Envoi les informations du formulaire (réponses aux questions) au serveur
     fileprivate func sendDataFormulaire() {
-        let messageFormulaire = ElasticSearchAPI.getInstance().generateMessageFormulaire(content: self.formAnswers)
-        ElasticSearchAPI.getInstance().postFormulaire(message: messageFormulaire)
+        let messageFormulaire = ElasticSearchAPI.shared.generateMessageFormulaire(content: self.formAnswers)
+        ElasticSearchAPI.shared.postFormulaire(message: messageFormulaire)
     }
 }
